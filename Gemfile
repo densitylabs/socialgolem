@@ -32,7 +32,14 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-gem 'pry-rails', group: :development
+group :development do
+  gem 'better_errors'
+  gem 'binding_of_caller'
+end
+
+group :development, :test do
+  gem 'pry-rails'
+end
 
 # For the Twitter authentication
 gem 'twitter_oauth'

@@ -1,10 +1,10 @@
-# Class comment
 class OauthProvider
   def request_token
     client.request_token(oauth_callback: TWITTER_CONF['callback_url'])
   end
 
   def authorize_and_create_user(request_token, oauth_verifier)
+    binding.pry
     auth_token = client.authorize(request_token.token,
                                   request_token.secret,
                                   oauth_verifier: oauth_verifier)

@@ -1,4 +1,3 @@
-# Class comment
 class TwitterConnector
   attr_accessor :user
 
@@ -7,23 +6,26 @@ class TwitterConnector
   end
 
   def aloof_users
+    # post supports fetching more than 100 users
     users = client.send('post',
       "/users/lookup.json?user_id=#{aloof_users_ids.join(',')}")
+
+    return [] if users.is_a?(Hash) && users['errors']
     users.map { |user| user.slice('id', 'name', 'screen_name') }
   end
 
   def unfollow_users(users_ids)
-    unfollowed_users = []
+    users = []
 
     users_ids.each do |user_id|
       begin
         user = client.unfriend(user_id)
-        unfollowed_users << user.slice('id', 'screen_name')
+        users << user.slice('id', 'screen_name')
       rescue
       end
     end
 
-    unfollowed_users
+    users
   end
 
   private
