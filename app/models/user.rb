@@ -1,4 +1,3 @@
-class User < Activerecord::Base
-  def self.create_user_from_params(params)
-  end
+class User < ActiveRecord::Base
+  validates :screen_name, uniqueness: true
 end

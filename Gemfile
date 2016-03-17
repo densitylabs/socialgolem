@@ -27,15 +27,17 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
-# For the Twitter authentication
-gem 'twitter_oauth'
-
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
 end
 
 gem 'pry-rails', group: :development
+
+# For the Twitter authentication
+gem 'twitter_oauth'
+
+gem 'haml-rails'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

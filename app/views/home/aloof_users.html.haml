@@ -1,0 +1,12 @@
+%p
+  Do you want to unfollow all the users below?
+
+  = form_tag(home_unfollow_users_path, method: 'post') do
+    = hidden_field_tag 'users_ids', @aloof_users.map { |user| user[:id] }
+    = button_tag 'Unfollow users'
+
+Users who you are following and they aren't following you:
+
+- @aloof_users.each do |user|
+  %p
+    %span= link_to user['screen_name'], "http://twitter.com/#{user['screen_name']}"

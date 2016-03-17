@@ -55,5 +55,7 @@ TwitterClient::Application.routes.draw do
   #   end
 
   root 'home#index'
+  get '/home/aloof_users', to: 'home#aloof_users'
+  post '/home/unfollow_users', to: 'home#unfollow_users'
   get '/oauth/callback', to: 'oauth#callback'
 end
