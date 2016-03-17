@@ -1,8 +1,8 @@
 class OauthController < ApplicationController
   def callback
-    oauth_provider = TwitterUserEnroller.new
-    user = oauth_provider.authorize_and_create_user(session[:request_token],
-                                                    params[:oauth_verifier])
+    enroller = TwitterUserEnroller.new
+    user = enroller.authorize_and_create_user(session[:request_token],
+                                              params[:oauth_verifier])
     session[:request_token] = nil
     session[:user_id] = user.id
 

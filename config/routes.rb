@@ -55,7 +55,12 @@ TwitterBot::Application.routes.draw do
   #   end
 
   root 'home#index'
-  get '/home/aloof_users', to: 'home#aloof_users'
-  post '/home/unfollow_users', to: 'home#unfollow_users'
+
+  namespace :home do
+    get 'unfriendly_users'
+    get 'users_im_unfriendly_with'
+    post 'unfollow_users'
+  end
+
   get '/oauth/callback', to: 'oauth#callback'
 end

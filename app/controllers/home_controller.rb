@@ -2,17 +2,21 @@ class HomeController < ApplicationController
   def index
   end
 
-  def aloof_users
-    @users = oauth_provider.aloof_users
+  def unfriendly_users
+    @users = connector.unfriendly_users
   end
 
   def unfollow_users
-    @users = oauth_provider.unfollow_users(params[:users_ids].split(','))
+    @users = connector.unfollow_users(params[:users_ids].split(','))
+  end
+
+  def users_im_unfriendly_with
+    @users = connector.users_im_unfriendly_with
   end
 
   private
 
-  def oauth_provider
-    @oauth_provider ||= TwitterUserConnector.new(User.find(session[:user_id]))
+  def connector
+    @connector ||= TwitterUserConnector.new(User.find(session[:user_id]))
   end
 end
