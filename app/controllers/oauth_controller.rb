@@ -3,6 +3,7 @@ class OauthController < ApplicationController
     oauth_provider = TwitterUserEnroller.new
     user = oauth_provider.authorize_and_create_user(session[:request_token],
                                                     params[:oauth_verifier])
+    session[:request_token] = nil
     session[:user_id] = user.id
 
     redirect_to home_aloof_users_path

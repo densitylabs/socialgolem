@@ -1,4 +1,4 @@
-class TwitterConnector
+class TwitterUserConnector
   attr_accessor :user
 
   def initialize(user)

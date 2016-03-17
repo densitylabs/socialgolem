@@ -13,6 +13,6 @@ class HomeController < ApplicationController
   private
 
   def oauth_provider
-    @oauth_provider ||= TwitterConnector.new(User.find(session[:user_id]))
+    @oauth_provider ||= TwitterUserConnector.new(User.find(session[:user_id]))
   end
 end
