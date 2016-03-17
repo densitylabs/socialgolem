@@ -3,4 +3,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-TwitterClient::Application.load_tasks
+TwitterBot::Application.load_tasks
