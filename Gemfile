@@ -39,11 +39,17 @@ end
 
 group :development, :test do
   gem 'pry-rails'
+  gem 'guard-rspec', require: false
+end
+
+group :test do
+  gem 'rspec-rails', '~> 3.0'
+  gem 'factory_girl_rails', '~> 4.0'
+  gem 'database_cleaner', '~> 1.5.1'
 end
 
 # For the Twitter authentication
 gem 'twitter_oauth'
-
 gem 'haml-rails'
 
 # Use ActiveModel has_secure_password
