@@ -13,8 +13,7 @@ class ApplicationController < ActionController::Base
     unless session[:user_id] || params[:oauth_verifier]
       reset_session
       enroller = TwitterUserEnroller.new
-      request_token = enroller.request_token
-      session[:request_token] = request_token
+      session[:request_token] = enroller.request_token
 
       redirect_to session[:request_token].authorize_url
     end

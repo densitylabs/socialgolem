@@ -29,7 +29,6 @@ class TwitterUserConnector
 
     ids.each do |id|
       begin
-        binding.pry
         user = client.send(status, id)
         users << user.slice('id', 'screen_name')
       rescue

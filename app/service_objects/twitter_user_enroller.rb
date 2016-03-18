@@ -5,20 +5,20 @@ class TwitterUserEnroller
   end
 
   def authorize_and_create_user(request_token, oauth_verifier)
-    auth_token = client.authorize(request_token.token,
+    access_token = client.authorize(request_token.token,
                                   request_token.secret,
                                   oauth_verifier: oauth_verifier)
-    create_user(auth_token)
+    create_user(access_token)
   end
 
   private
 
-  def create_user(auth_token)
+  def create_user(access_token)
     user_info = client.info
     user = User.find_or_initialize_by(screen_name: user_info['screen_name'])
     user.update_attributes!(name: user_info['name'],
-                            token: auth_token.token,
-                            secret: auth_token.secret)
+                            token: access_token.token,
+                            secret: access_token.secret)
     user
   end
 

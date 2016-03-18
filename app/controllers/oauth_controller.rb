@@ -6,6 +6,6 @@ class OauthController < ApplicationController
     session[:request_token] = nil
     session[:user_id] = user.id
 
-    redirect_to home_aloof_users_path
+    redirect_to root_path
   end
 end
