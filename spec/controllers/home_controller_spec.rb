@@ -1,13 +1,8 @@
 require 'rails_helper'
 
-def login_user(user = nil)
-  user ||= create(:user)
-  session[:user_id] = user.id
-end
-
 describe HomeController, 'GET#index' do
   it 'responds successfully' do
-    login_user
+    authenticate_user
     get :index
     expect(response).to have_http_status :ok
   end
@@ -17,7 +12,7 @@ describe HomeController, 'GET#unfriendly_users' do
   let(:unfriendly_users) { double('unfriendly_users') }
 
   before do
-    login_user
+    authenticate_user
     TwitterUserConnector.any_instance.stub(unfriendly_users: unfriendly_users)
   end
 
@@ -39,7 +34,7 @@ describe HomeController, 'POST #unfollow_users' do
   let(:connector) { double(unfollow_users: twitter_response) }
 
   before do
-    login_user
+    authenticate_user
     TwitterUserConnector.stub(new: connector)
   end
 
@@ -66,7 +61,7 @@ describe HomeController, 'GET #users_im_unfriendly_with' do
   let(:users_im_unfriendly_with) { double('users_im_unfriendly_with') }
 
   before do
-    login_user
+    authenticate_user
     TwitterUserConnector.any_instance.stub(
       users_im_unfriendly_with: users_im_unfriendly_with)
   end
@@ -84,12 +79,12 @@ describe HomeController, 'GET #users_im_unfriendly_with' do
   end
 end
 
-describe HomeController, 'POST #follow_users', focus: true do
+describe HomeController, 'POST #follow_users' do
   let(:twitter_response) { [{}, {}] }
   let(:connector) { double(follow_users: twitter_response) }
 
   before do
-    login_user
+    authenticate_user
     TwitterUserConnector.stub(new: connector)
   end
 

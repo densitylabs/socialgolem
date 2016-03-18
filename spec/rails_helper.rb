@@ -7,6 +7,8 @@ require 'spec_helper'
 require 'rspec/rails'
 require 'support/database_cleaner'
 require 'support/factory_girl'
+
+require 'support/authentication'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -29,6 +31,7 @@ require 'support/factory_girl'
 ActiveRecord::Migration.check_pending!
 
 RSpec.configure do |config|
+  config.include Authentication
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
