@@ -7,7 +7,9 @@ development:
   <<: *defaults
 
 test:
-  <<: *defaults
+  key: key
+  secret: my
+  callback_url: http://myapp.com:3000/oauth/callback
 
 production:
   <<: *defaults
