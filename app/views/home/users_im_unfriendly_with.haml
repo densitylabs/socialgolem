@@ -1,0 +1,18 @@
+- if @users.present?
+  %p
+    Do you want to start following all the users below?
+
+    = form_tag(home_follow_users_path, method: 'post') do
+      = hidden_field_tag 'users_ids', @users.map { |user| user['id'] }.join(',')
+      = button_tag 'Follow users'
+
+Users who you aren't following back:
+
+- if @users.present?
+  - @users.each do |user|
+    %p
+      %span= link_to user['screen_name'], "http://twitter.com/#{user['screen_name']}"
+
+- else
+  %p
+    None

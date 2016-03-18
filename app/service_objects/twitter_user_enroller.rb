@@ -1,3 +1,4 @@
+# Provides functionality to enroll an authenticated user.
 class TwitterUserEnroller
   def request_token
     client.request_token(oauth_callback: TWITTER_CONF['callback_url'])

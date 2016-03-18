@@ -1,3 +1,4 @@
+# Communicates with Twitter in behalf of an app user.
 class TwitterUserConnector
   attr_accessor :user
 
@@ -9,12 +10,27 @@ class TwitterUserConnector
     fetch_users_based_on_ids(unfriendly_users_ids)
   end
 
-  def unfollow_users(users_ids)
+  def unfollow_users(ids)
+    change_friendship_status_for(ids, :unfriend)
+  end
+
+  def users_im_unfriendly_with
+    fetch_users_based_on_ids(users_im_unfriendly_with_ids)
+  end
+
+  def follow_users(ids)
+    change_friendship_status_for(ids, :friend)
+  end
+
+  private
+
+  def change_friendship_status_for(ids, status)
     users = []
 
-    users_ids.each do |user_id|
+    ids.each do |id|
       begin
-        user = client.unfriend(user_id)
+        binding.pry
+        user = client.send(status, id)
         users << user.slice('id', 'screen_name')
       rescue
       end
@@ -22,12 +38,6 @@ class TwitterUserConnector
 
     users
   end
-
-  def users_im_unfriendly_with
-    fetch_users_based_on_ids(users_im_unfriendly_with)
-  end
-
-  private
 
   def fetch_users_based_on_ids(ids)
     # post supports fetching more than 100 users
@@ -48,7 +58,7 @@ class TwitterUserConnector
     client.friends_ids['ids'] - client.followers_ids['ids']
   end
 
-  def users_im_unfriendly_with
+  def users_im_unfriendly_with_ids
     client.followers_ids['ids'] - client.friends_ids['ids']
   end
 end

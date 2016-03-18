@@ -1,0 +1,9 @@
+%p
+  <
+  = link_to 'Home', root_path
+
+The following users have been followed:
+
+- @users.each do |user|
+  %p
+    %span= link_to user['screen_name'], "http://twitter.com/#{user['screen_name']}"

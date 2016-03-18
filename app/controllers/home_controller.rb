@@ -14,6 +14,10 @@ class HomeController < ApplicationController
     @users = connector.users_im_unfriendly_with
   end
 
+  def follow_users
+    @users = connector.follow_users(params[:users_ids].split(','))
+  end
+
   private
 
   def connector

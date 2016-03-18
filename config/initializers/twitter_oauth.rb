@@ -4,5 +4,9 @@ module TwitterOAuth
     def unfriend(id)
       post("/friendships/destroy.json?user_id=#{id}")
     end
+
+    def friend(id)
+      post("/friendships/create.json?user_id=#{id}")
+    end
   end
 end
