@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   def require_authentication
     unless session[:user_id] || params[:oauth_verifier]
       reset_session
-      enroller = TwitterUserEnroller.new
+      enroller = TwitterUserEnroller.new(TWITTER_CONF)
       session[:request_token] = enroller.request_token
 
       redirect_to session[:request_token].authorize_url

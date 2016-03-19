@@ -1,11 +1,19 @@
 class OauthController < ApplicationController
   def callback
-    enroller = TwitterUserEnroller.new
-    user = enroller.authorize_and_create_user(session[:request_token],
-                                              params[:oauth_verifier])
+    enroller = TwitterUserEnroller.new(TWITTER_CONF)
+    user_info = enroller.authorize_user(session[:request_token],
+                                        params[:oauth_verifier])
+
+    session[:user_id] = persist_user(user_info).id
     session[:request_token] = nil
-    session[:user_id] = user.id
 
     redirect_to root_path
+  end
+
+  private
+
+  def persist_user(user_info)
+    User.find_or_create_user_with({ screen_name: user_info['screen_name'] },
+                                    user_info.slice('name', 'token', 'secret'))
   end
 end

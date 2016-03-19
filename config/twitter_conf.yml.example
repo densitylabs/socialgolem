@@ -1,15 +1,13 @@
 defaults: &defaults
-  key: 19IGpn8RsB1wFrVNElcoyCbQd
-  secret: bHZhtfzUrpbBQmgxVnflg09RzwtIlsE7Ymw7LnpTDvv7bBbpAS
+  key: key
+  secret: secret
   callback_url: http://myapp.com:3000/oauth/callback
 
 development:
   <<: *defaults
 
 test:
-  key: key
-  secret: my
-  callback_url: http://myapp.com:3000/oauth/callback
+  <<: *defaults
 
 production:
   <<: *defaults

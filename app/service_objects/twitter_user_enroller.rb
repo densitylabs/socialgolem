@@ -1,29 +1,30 @@
 # Provides functionality to enroll an authenticated user.
 class TwitterUserEnroller
-  def request_token
-    client.request_token(oauth_callback: TWITTER_CONF['callback_url'])
+  attr_reader :twitter_conf
+
+  def initialize(twitter_conf)
+    @twitter_conf = twitter_conf
   end
 
-  def authorize_and_create_user(request_token, oauth_verifier)
+  def request_token
+    client.request_token(oauth_callback: twitter_conf['callback_url'])
+  end
+
+  # authorizes the user in Twitter and returns her information
+  def authorize_user(request_token, oauth_verifier)
     access_token = client.authorize(request_token.token,
-                                  request_token.secret,
-                                  oauth_verifier: oauth_verifier)
-    create_user(access_token)
+                                    request_token.secret,
+                                    oauth_verifier: oauth_verifier)
+
+    # hash rocket syntax for consistency with the info
+    client.info.merge('token' => request_token.token,
+                      'secret' => request_token.secret)
   end
 
   private
 
-  def create_user(access_token)
-    user_info = client.info
-    user = User.find_or_initialize_by(screen_name: user_info['screen_name'])
-    user.update_attributes!(name: user_info['name'],
-                            token: access_token.token,
-                            secret: access_token.secret)
-    user
-  end
-
   def client
-    @client ||= TwitterOAuth::Client.new(consumer_key: TWITTER_CONF['key'],
-                                         consumer_secret: TWITTER_CONF['secret'])
+    @client ||= TwitterOAuth::Client.new(consumer_key: twitter_conf['key'],
+                                         consumer_secret: twitter_conf['secret'])
   end
 end

@@ -62,6 +62,7 @@ TwitterBot::Application.routes.draw do
     get 'users_im_unfriendly_with'
     post 'unfollow_users'
     post 'follow_users'
+    get 'logout'
   end
 
   get '/oauth/callback', to: 'oauth#callback'

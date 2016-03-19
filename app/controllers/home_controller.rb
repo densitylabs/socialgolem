@@ -18,6 +18,11 @@ class HomeController < ApplicationController
     @users = connector.follow_users(params[:users_ids].split(','))
   end
 
+  def logout
+    reset_session
+    redirect_to root_path
+  end
+
   private
 
   def connector
