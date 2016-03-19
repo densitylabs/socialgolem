@@ -9,6 +9,8 @@ describe ApplicationController do
 
   context 'if users is not logged in' do
     it 'redirects to Twitter' do
+      request_token = double(authorize_url: 'http://foo.bar')
+      TwitterOAuth::Client.any_instance.stub(request_token: request_token)
       get :index
       expect(response).to have_http_status(302)
     end
@@ -21,7 +23,7 @@ describe ApplicationController do
     end
   end
 
-  context 'if users is logged in', focus: true do
+  context 'if users is logged in' do
     it 'responds with status ok' do
       authenticate_user
       get :index

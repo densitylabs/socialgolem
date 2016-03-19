@@ -17,8 +17,8 @@ class TwitterUserEnroller
                                     oauth_verifier: oauth_verifier)
 
     # hash rocket syntax for consistency with the info
-    client.info.merge('token' => request_token.token,
-                      'secret' => request_token.secret)
+    client.info.merge('token' => access_token.token,
+                      'secret' => access_token.secret)
   end
 
   private
