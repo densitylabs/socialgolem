@@ -15,5 +15,9 @@
 /log/*.log
 /tmp
 
+
+.DS_Store
+
 config/twitter_conf.yml
+
 tags
