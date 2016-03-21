@@ -54,7 +54,7 @@ TwitterBot::Application.routes.draw do
   #     resources :products
   #   end
 
-  root 'home#index'
+  root 'home#landing'
   get 'home/', to: 'home#index'
 
   namespace :home do

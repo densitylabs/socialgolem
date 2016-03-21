@@ -1,4 +1,10 @@
 class HomeController < ApplicationController
+  before_action :require_authentication, except: :landing
+
+  def landing
+    redirect_to action: :index if authenticated_user?
+  end
+
   def index
   end
 

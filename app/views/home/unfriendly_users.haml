@@ -4,14 +4,16 @@
 
     = form_tag(home_unfollow_users_path, method: 'post') do
       = hidden_field_tag 'users_ids', @users.map { |user| user['id'] }.join(',')
-      = button_tag 'Unfollow users'
 
+      %a(onclick='$(this).closest("form").submit();' href='#' class='waves-effect waves-light btn') Unfollow users
+
+%br
 Users who aren't following you back:
 
 - if @users.present?
   - @users.each do |user|
     %p
-      %span= link_to user['screen_name'], "http://twitter.com/#{user['screen_name']}"
+      = link_to "• #{user['screen_name']}", "http://twitter.com/#{user['screen_name']}"
 
 - else
   %p
