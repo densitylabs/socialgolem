@@ -2,6 +2,8 @@ require 'rails_helper'
 
 describe ApplicationController do
   controller do
+    before_action :require_authentication
+
     def index
       render nothing: true
     end
