@@ -13,7 +13,14 @@ class HomeController < ApplicationController
   end
 
   def unfollow_users
-    @users = connector.unfollow_users(params[:users_ids].split(','))
+    activity = Activities::FriendshipBatchChange.create(
+      user_id: session[:user_id],
+      twitter_users_ids: params[:users_ids].split(','),
+      friendship_status: :unfriend,
+      status: 'started')
+
+    FriendshipBatchWorker.perform_async(activity.id, session[:user_id])
+    redirect_to activity_path(activity)
   end
 
   def users_im_unfriendly_with
@@ -21,7 +28,8 @@ class HomeController < ApplicationController
   end
 
   def follow_users
-    activity = Activities::FriendshipBatchChange.create(user_id: session[:user_id],
+    activity = Activities::FriendshipBatchChange.create(
+      user_id: session[:user_id],
       twitter_users_ids: params[:users_ids].split(','),
       friendship_status: :friend,
       status: 'started')

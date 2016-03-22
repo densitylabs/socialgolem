@@ -1,6 +1,4 @@
-%p
-  <
-  = link_to 'Home', root_path
+- action_verb = @activity.friendship_status == 'friend' ? 'followed' : 'unfollowed'
 
 - if @activity.status == 'started'
   %p This tasks is being processed. Refresh at will.
@@ -8,14 +6,14 @@
 - if @activity.status == 'completed'
 
   - if @processed_twitter_users.present?
-    These users have been followed:
+    These users have been #{action_verb}:
 
     - @processed_twitter_users.each do |user|
       %p
         %span= link_to "• #{user['screen_name']}", "http://twitter.com/#{user['screen_name']}"
 
   - if @unprocessed_twitter_users.present?
-    An error was found when trying to follow these users:
+    An error was found when trying when trying to process these users:
 
     - @unprocessed_twitter_users.each do |user|
       %p
