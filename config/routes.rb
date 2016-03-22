@@ -57,6 +57,8 @@ TwitterBot::Application.routes.draw do
   root 'home#landing'
   get 'home/', to: 'home#index'
 
+  resources :activities, only: :show
+
   namespace :home do
     get 'unfriendly_users'
     get 'users_im_unfriendly_with'

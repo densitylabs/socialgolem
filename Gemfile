@@ -52,6 +52,9 @@ end
 gem 'twitter_oauth'
 gem 'haml-rails'
 
+# Background job processing
+gem 'sidekiq'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

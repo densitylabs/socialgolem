@@ -11,7 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160316181951) do
+ActiveRecord::Schema.define(version: 20160321231125) do
+
+  create_table "friendship_batch_changes", force: true do |t|
+    t.integer "user_id"
+    t.text    "twitter_users_ids"
+    t.string  "friendship_status"
+    t.string  "status"
+    t.text    "processed_twitter_users_ids"
+    t.text    "unprocessed_twitter_users_ids"
+  end
 
   create_table "users", force: true do |t|
     t.string "name"

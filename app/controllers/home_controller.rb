@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  before_action :require_authentication, except: :landing
+  before_action :require_authentication, except: [:landing, :logout]
 
   def landing
     redirect_to action: :index if authenticated_user?
@@ -21,12 +21,18 @@ class HomeController < ApplicationController
   end
 
   def follow_users
-    @users = connector.follow_users(params[:users_ids].split(','))
+    activity = Activities::FriendshipBatchChange.create(user_id: session[:user_id],
+      twitter_users_ids: params[:users_ids].split(','),
+      friendship_status: :friend,
+      status: 'started')
+
+    FriendshipBatchWorker.perform_async(activity.id, session[:user_id])
+    redirect_to activity_path(activity)
   end
 
   def logout
     reset_session
-    redirect_to root_path
+    redirect_to action: :landing
   end
 
   private

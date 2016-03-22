@@ -1,9 +1,11 @@
 # Communicates with Twitter in behalf of an app user.
 class TwitterUserConnector
-  attr_accessor :user
+  attr_accessor :user, :processed_twitter_users, :unprocessed_twitter_users
 
   def initialize(user)
     @user = user
+    @processed_twitter_users = []
+    @unprocessed_twitter_users_ids = []
   end
 
   def unfriendly_users
@@ -18,33 +20,27 @@ class TwitterUserConnector
     fetch_users_based_on_ids(users_im_unfriendly_with_ids)
   end
 
-  def follow_users(ids)
-    change_friendship_status_for(ids, :friend)
-  end
-
-  private
-
-  def change_friendship_status_for(ids, status)
-    users = []
-
+  def change_friendship_status_for(ids, friendship_status)
     ids.each do |id|
       begin
-        user = client.send(status, id)
-        users << user.slice('id', 'screen_name')
+        twitter_user = client.send(friendship_status, id)
+        processed_twitter_users << twitter_user['screen_name']
       rescue
       end
     end
-
-    users
   end
 
-  def fetch_users_based_on_ids(ids)
+  def fetch_users_based_on_ids(ids, opts = {})
+    return if ids.blank?
+    opts[:identifier] = 'user_id' unless opts[:identifier]
     # post supports fetching more than 100 users
-    users = client.send('post', "/users/lookup.json?user_id=#{ids.join(',')}")
+    users = client.send('post', "/users/lookup.json?#{opts[:identifier]}=#{ids.join(',')}")
 
     return [] if users.is_a?(Hash) && users['errors']
     users.map { |user| user.slice('id', 'name', 'screen_name') }
   end
+
+  private
 
   def client
     @client ||= TwitterOAuth::Client.new(consumer_key: TWITTER_CONF['key'],
