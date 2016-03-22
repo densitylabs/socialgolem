@@ -30,11 +30,13 @@ class TwitterUserConnector
     end
   end
 
+  # client.send('post'..) is recommended for fetching more than 100 users
   def fetch_users_based_on_ids(ids, opts = {})
     return if ids.blank?
     opts[:identifier] = 'user_id' unless opts[:identifier]
-    # post supports fetching more than 100 users
-    users = client.send('post', "/users/lookup.json?#{opts[:identifier]}=#{ids.join(',')}")
+
+    users = client.send('post',
+      "/users/lookup.json?#{opts[:identifier]}=#{ids.join(',')}")
 
     return [] if users.is_a?(Hash) && users['errors']
     users.map { |user| user.slice('id', 'name', 'screen_name') }
