@@ -57,8 +57,6 @@ TwitterBot::Application.routes.draw do
   root 'home#landing'
   get 'home/', to: 'home#index'
 
-  resources :activities, only: :show
-
   namespace :home do
     get 'unfriendly_users'
     get 'users_im_unfriendly_with'
@@ -66,6 +64,9 @@ TwitterBot::Application.routes.draw do
     post 'follow_users'
     get 'logout'
   end
+
+  resources :activities, only: :show
+  resources :twitter_users, only: :show
 
   get '/oauth/callback', to: 'oauth#callback'
 end

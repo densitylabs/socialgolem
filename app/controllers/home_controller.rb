@@ -42,10 +42,4 @@ class HomeController < ApplicationController
     reset_session
     redirect_to action: :landing
   end
-
-  private
-
-  def connector
-    @connector ||= TwitterUserConnector.new(User.find(session[:user_id]))
-  end
 end

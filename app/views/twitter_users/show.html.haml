@@ -1,0 +1,44 @@
+%div
+  %div(style='width: 50%; float: left;')
+    - if @friends.present?
+
+      %h4 @#{params[:id]}'s friends
+
+      - @friends.each do |friend|
+        %p
+          Name:
+          = friend['name']
+          %br
+          User name:
+          = friend['screen_name']
+          %br
+          Friends count:
+          = friend['friends_count']
+          %br
+          Followers count:
+          = friend['followers_count']
+
+    - else
+      %p This user is not following anyone.
+
+  %div(style='width: 50%; float: right;')
+    - if @followers.present?
+
+      %h4 @#{params[:id]}'s followers
+
+      - @followers.each do |follower|
+        %p
+          Name:
+          = follower['name']
+          %br
+          User name:
+          = follower['screen_name']
+          %br
+          Friends count:
+          = follower['friends_count']
+          %br
+          Followers count:
+          = follower['followers_count']
+
+    - else
+      %p This user doesn't have followers.
