@@ -177,6 +177,7 @@ GEM
       slop (~> 3.4)
     pry-rails (0.3.4)
       pry (>= 0.9.10)
+    puma (3.2.0)
     rack (2.0.0.alpha)
       json
     rack-test (0.6.3)
@@ -272,7 +273,9 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   pry-rails
+  puma
   rails (= 5.0.0.beta3)
+  redis
   rspec-core!
   rspec-expectations!
   rspec-mocks!
