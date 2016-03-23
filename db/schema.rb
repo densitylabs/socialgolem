@@ -13,7 +13,7 @@
 
 ActiveRecord::Schema.define(version: 20160321231125) do
 
-  create_table "friendship_batch_changes", force: true do |t|
+  create_table "friendship_batch_changes", force: :cascade do |t|
     t.integer "user_id"
     t.text    "twitter_users_ids"
     t.string  "friendship_status"
@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 20160321231125) do
     t.text    "unprocessed_twitter_users_ids"
   end
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "screen_name"
     t.string "token"

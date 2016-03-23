@@ -19,7 +19,7 @@ class HomeController < ApplicationController
       friendship_status: :unfriend,
       status: 'started')
 
-    FriendshipBatchWorker.perform_async(activity.id, session[:user_id])
+    FriendshipBatchChangeJob.perform_later(activity.id, session[:user_id])
     redirect_to activity_path(activity)
   end
 
@@ -34,7 +34,7 @@ class HomeController < ApplicationController
       friendship_status: :friend,
       status: 'started')
 
-    FriendshipBatchWorker.perform_async(activity.id, session[:user_id])
+    FriendshipBatchChangeJob.perform_later(activity.id, session[:user_id])
     redirect_to activity_path(activity)
   end
 

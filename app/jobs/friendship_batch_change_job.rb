@@ -1,5 +1,5 @@
-class FriendshipBatchWorker
-  include Sidekiq::Worker
+class FriendshipBatchChangeJob < ActiveJob::Base
+  queue_as :default
 
   def perform(activity_id, user_id)
     activity  = Activities::FriendshipBatchChange.find(activity_id)
