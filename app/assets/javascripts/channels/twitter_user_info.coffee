@@ -6,6 +6,7 @@ App.twitter_user_info = App.cable.subscriptions.create "TwitterUserInfoChannel",
     # Called when the subscription has been terminated by the server
 
   received: (data) ->
+    JSON.parse(temp1['message'])[0]
     console.log(data)
 
   # speak: (message) ->

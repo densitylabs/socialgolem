@@ -1,0 +1,17 @@
+{
+  "name": "twitter_bot",
+  "authors": [
+    "density labs"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "dependencies": {
+    "materialize": "~0.97.5",
+    "underscore": "~1.8.3"
+  }
+}
