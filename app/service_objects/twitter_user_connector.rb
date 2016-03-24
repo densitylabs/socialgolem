@@ -41,7 +41,8 @@ class TwitterUserConnector
     return [] if users.is_a?(Hash) && users['errors']
 
     users.map do |user|
-      user.slice('id', 'name', 'screen_name', 'friends_count', 'followers_count')
+      user.slice('id', 'name', 'screen_name', 'friends_count',
+                 'followers_count', 'profile_image_url')
     end
   end
 

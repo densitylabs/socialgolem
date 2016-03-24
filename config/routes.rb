@@ -16,7 +16,9 @@ Rails.application.routes.draw do
   end
 
   resources :activities, only: :show
-  resources :twitter_users, only: :show
+  resources :twitter_users, only: :show do
+    get :relations, on: :member
+  end
 
   get '/oauth/callback', to: 'oauth#callback'
 end

@@ -12,6 +12,8 @@ Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'co
 
 
 Rails.application.config.assets.precompile += %w(
-  channels/twitter_user_info.js
+  twitter_card.css
+
   cable.js
+  channels/twitter_user_info.js
 )

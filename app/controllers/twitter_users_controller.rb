@@ -1,6 +1,12 @@
 class TwitterUsersController < ApplicationController
   def show
-    LoadRelatedTwitterUsersJob.perform_later(session[:user_id], params[:id],
-                                           'followers')
+  end
+
+  def relations
+    LoadRelatedTwitterUsersJob.new.perform(session[:user_id],
+                                           params[:id],
+                                           params[:relation_type])
+
+    render plain: 'Users being fetched in the background. Expect broadcast message.'
   end
 end

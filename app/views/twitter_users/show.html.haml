@@ -1,16 +1,45 @@
+- content_for :header do
+  = stylesheet_link_tag "twitter_card", media: "all"
+
+  %meta(name='fn-user-relations-url' content=relations_twitter_user_path)
+
+  :javascript
+    $(document).ready(function(){
+      var user_id = window.location.pathname.split('/')[2];
+
+      $.ajax({
+        url: $('meta[name="fn-user-relations-url"]').attr('content'),
+        data: { id: user_id, relation_type: 'followers' }
+      })
+    });
+
+  -# tag needed for styling the user cards
+  %style
+
 %script#fn-user-template(type='text/template')
-  %p.fn-user-container
-    Name: <%= user['name'] %>
-    %br
-    User name: <%= user['screen_name'] %>
-    %br
-    Friends count: <%= user['friends_count'] %>
-    %br
-    Followers count: <%= user['followers_count'] %>
+  .twitter-card-container
+    .card-profile
+      %div{ class: 'card-profile_visual <%= user["screen_name"] %>'.html_safe }
+      .card-profile_user-infos
+        %span.infos_name <%= user['name'] %>
+        %span.infos_nick <%= user['screen_name'] %>
+        %a(href='#')
+      .card-profile_user-stats
+        .stats-holder
+          .user-stats
+            %strong Tweets
+            %span 1,337
+          .user-stats
+            %strong Following
+            %span <%= user['friends_count'] %>
+          .user-stats
+            %strong Followers
+            %span <%= user['followers_count'] %>
 
 %div#fn-users-container.fn-empty
+  -# Initial state (replaced by content when it's fetched)
   %p No users found
 
-= content_for :footer do
+- content_for :footer do
   = javascript_include_tag 'cable'
   = javascript_include_tag 'channels/twitter_user_info'
