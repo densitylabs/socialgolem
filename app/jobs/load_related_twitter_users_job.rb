@@ -3,13 +3,13 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
 
   attr_accessor :authenticated_user_id, :twitter_user_id, :type_of_users_to_find
 
-  # Example of call: perform(123, foo_bar, 'followers')
+  # Example: perform(123, foo_bar, 'followers')
   def perform(authenticated_user_id, twitter_user_id, type_of_users_to_find)
     @authenticated_user_id = authenticated_user_id
     @twitter_user_id = twitter_user_id
     @type_of_users_to_find = type_of_users_to_find
 
-    ActionCable.server.broadcast 'twitter_user_info', message: find_users.to_json
+    ActionCable.server.broadcast 'twitter_user_info', users: find_users.to_json
   end
 
   private

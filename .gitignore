@@ -15,8 +15,8 @@
 /log/*.log
 /tmp
 
-
 .DS_Store
+dump.rdb
 
 config/twitter_conf.yml
 

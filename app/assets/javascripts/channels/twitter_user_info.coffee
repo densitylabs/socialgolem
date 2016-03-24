@@ -6,8 +6,16 @@ App.twitter_user_info = App.cable.subscriptions.create "TwitterUserInfoChannel",
     # Called when the subscription has been terminated by the server
 
   received: (data) ->
-    JSON.parse(temp1['message'])[0]
-    console.log(data)
+    users = JSON.parse(data['users'])
+    html_template = $('#fn-user-template')
+    compiled_template = _.template(html_template.html())
+    $usersContainer = $('#fn-users-container')
 
-  # speak: (message) ->
-  #   @perform 'speak', message: message
+    if ($usersContainer.hasClass('fn-empty') == true)
+      $usersContainer.empty().removeClass('fn-empty');
+
+    debugger
+    for user in users
+      $usersContainer.append(
+        compiled_template({ user: user })
+      );

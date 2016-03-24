@@ -6,8 +6,4 @@ class TwitterUserInfoChannel < ApplicationCable::Channel
 
   def unsubscribed
   end
-
-  # def speak(data)
-  #   ActionCable.server.broadcast "twitter_user_info", message: data['message']
-  # end
 end

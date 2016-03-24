@@ -1,6 +1,6 @@
 class TwitterUsersController < ApplicationController
   def show
-    # @followers = connector.followers_info_for(params[:id])
-    # @friends = connector.friends_info_for(params[:id])
+    LoadRelatedTwitterUsersJob.perform_later(session[:user_id], params[:id],
+                                           'followers')
   end
 end
