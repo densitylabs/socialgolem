@@ -3,6 +3,9 @@
 
   %meta(name='fn-user-relations-url' content=relations_twitter_user_path)
 
+  = javascript_include_tag 'cable'
+  = javascript_include_tag 'channels/twitter_user_info'
+
   :javascript
     $(document).ready(function(){
       var user_id = window.location.pathname.split('/')[2];
@@ -13,7 +16,13 @@
       })
     });
 
-  -# tag needed for styling the user cards
+  :css
+    .twitter-card-container {
+      margin-left: 3em;
+      margin-top: 3em;
+    }
+
+  -# this tag is also needed for styling the user cards on the fly
   %style
 
 %script#fn-user-template(type='text/template')
@@ -36,10 +45,10 @@
             %strong Followers
             %span <%= user['followers_count'] %>
 
+%h2
+  = "@#{params[:id]}'s'"
+  followers
+
 %div#fn-users-container.fn-empty
   -# Initial state (replaced by content when it's fetched)
   %p No users found
-
-- content_for :footer do
-  = javascript_include_tag 'cable'
-  = javascript_include_tag 'channels/twitter_user_info'
