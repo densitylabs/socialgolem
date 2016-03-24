@@ -26,7 +26,6 @@ $datas-height: calc(100% - #{$visual-height} + 2px);
 
 body {
   background: #F0EFED;
-  font-family: 'ProximaNova-Regular', Helvetica neue, sans-serif;
 }
 
 .twitter-card-container {
@@ -39,6 +38,7 @@ body {
 }
 
 .card-profile {
+  font-family: Helvetica neue, sans-serif;
   float: left;
   // position: absolute;
 

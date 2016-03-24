@@ -16,4 +16,5 @@ Rails.application.config.assets.precompile += %w(
 
   cable.js
   channels/twitter_user_info.js
+  twitter_users/show.js
 )
