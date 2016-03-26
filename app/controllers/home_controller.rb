@@ -39,7 +39,7 @@ class HomeController < ApplicationController
   end
 
   def logout
-    reset_session
+    cookies.signed[:user_id] = nil
     redirect_to action: :landing
   end
 end

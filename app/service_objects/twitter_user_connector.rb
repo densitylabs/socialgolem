@@ -38,20 +38,23 @@ class TwitterUserConnector
 
     users = client.send(
       'post', "/users/lookup.json?#{opts[:identifier]}=#{ids.join(',')}")
+
     return [] if users.is_a?(Hash) && users['errors']
 
-    users.map do |user|
+    users = users.map do |user|
       user.slice('id', 'name', 'screen_name', 'friends_count',
                  'followers_count', 'profile_image_url', 'statuses_count')
     end
+
+    users.each { |user| user['profile_image_url'].sub!('_normal', '') }
   end
 
-  def followers_info_for(user_id)
-    fetch_users_based_on_ids followers_ids_for(user_id)
-  end
-
-  def friends_info_for(user_id)
-    fetch_users_based_on_ids friends_ids_for(user_id)
+  def relations_ids(user_id, relation)
+    if relation == 'friends'
+      friends_ids_for(user_id)
+    else
+      followers_ids_for(user_id)
+    end
   end
 
   private

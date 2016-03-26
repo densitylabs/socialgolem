@@ -1,42 +1,39 @@
+# Job that broadcasts information about related users (followings or followers)
+# of a user.
 class LoadRelatedTwitterUsersJob < ActiveJob::Base
   queue_as :default
 
-  attr_accessor :authenticated_user_id, :twitter_user_id, :type_of_users_to_find
+  attr_accessor :authenticated_user_id, :twitter_user_id, :relation
 
-  # Example: perform(123, foo_bar, 'followers')
-  def perform(authenticated_user_id, twitter_user_id, type_of_users_to_find)
+  # perform(123, 'foo_bar', 'followers')
+  def perform(authenticated_user_id, twitter_user_id, relation)
     @authenticated_user_id = authenticated_user_id
     @twitter_user_id = twitter_user_id
-    @type_of_users_to_find = type_of_users_to_find
+    @relation = relation
 
-    channel_id = "twitter_user_info_#{authenticated_user_id}_" \
-      "#{twitter_user_id}_#{type_of_users_to_find}"
-
-    ActionCable.server.broadcast channel_id, users: make_users_images_fullsize(find_users)
-    # ActionCable.server.broadcast 'twitter_user_info', users: the_users
+    broadcast_users_info
   end
 
   private
 
-  # def the_users
-  #   [{"id"=>12022522,
-  #     "name"=>"Hector Perez",
-  #     "screen_name"=>"arpahector",
-  #     "friends_count"=>757,
-  #     "followers_count"=>848,
-  #     "profile_image_url"=>"http://pbs.twimg.com/profile_images/422059642152173568/CQ73y90m.jpeg"}]
-  # end
+  def broadcast_users_info
+    ids = connector.relations_ids(twitter_user_id, relation)
 
-  def make_users_images_fullsize(users)
-    users.each { |user| user['profile_image_url'].sub!('_normal', '') }
+    ids.in_groups_of(100, false) do |group_of_ids|
+      ActionCable.server.broadcast(
+        channel_id,
+        users: connector.fetch_users_based_on_ids(group_of_ids))
+    end
   end
 
-  def find_users
-    if type_of_users_to_find == 'friends'
-      connector.friends_info_for(twitter_user_id)
-    else
-      connector.followers_info_for(twitter_user_id)
-    end
+  def broadcast_message(message)
+    ActionCable.server.broadcast(channel_id,
+      users: make_users_images_fullsize(find_users))
+  end
+
+  def channel_id
+    "twitter_user_info_#{authenticated_user_id}_" \
+      "#{twitter_user_id}_#{relation}"
   end
 
   def connector
