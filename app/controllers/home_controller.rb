@@ -2,7 +2,7 @@ class HomeController < ApplicationController
   before_action :require_authentication, except: [:landing, :logout]
 
   def landing
-    redirect_to action: :index if authenticated_user?
+    redirect_to action: :index if authenticated_user
   end
 
   def index
@@ -14,12 +14,12 @@ class HomeController < ApplicationController
 
   def unfollow_users
     activity = Activities::FriendshipBatchChange.create(
-      user_id: session[:user_id],
+      user_id: cookies.signed[:user_id],
       twitter_users_ids: params[:users_ids].split(','),
       friendship_status: :unfriend,
       status: 'started')
 
-    FriendshipBatchChangeJob.perform_later(activity.id, session[:user_id])
+    FriendshipBatchChangeJob.perform_later(activity.id, cookies.signed[:user_id])
     redirect_to activity_path(activity)
   end
 
@@ -29,12 +29,12 @@ class HomeController < ApplicationController
 
   def follow_users
     activity = Activities::FriendshipBatchChange.create(
-      user_id: session[:user_id],
+      user_id: cookies.signed[:user_id],
       twitter_users_ids: params[:users_ids].split(','),
       friendship_status: :friend,
       status: 'started')
 
-    FriendshipBatchChangeJob.perform_later(activity.id, session[:user_id])
+    FriendshipBatchChangeJob.perform_later(activity.id, cookies.signed[:user_id])
     redirect_to activity_path(activity)
   end
 

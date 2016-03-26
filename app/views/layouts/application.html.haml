@@ -38,6 +38,10 @@
         color: black;
       }
 
+      body {
+        margin-bottom: 2em;
+      }
+
     = yield :header
 
   %body
@@ -47,7 +51,7 @@
           = image_tag('densitylabs-logo.svg', class: 'menu-icon')
 
         %ul#nav-mobile.left.hide-on-med-and-down
-          - if authenticated_user?
+          - if authenticated_user
             %li
               = link_to 'Home', home_path
             %li

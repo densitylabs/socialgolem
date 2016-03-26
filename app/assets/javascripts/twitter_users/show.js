@@ -1,16 +1,22 @@
-$(window).load(function() {
-  var userId = window.location.pathname.split('/')[2];
-  var relationType = $('meta[name="fn-relation-type"]').attr('content');
+window.userId = window.location.pathname.split('/')[2];
 
+function changeChannelSubscriptionTo(relation) {
+  App.subscriptions['twitterUserInfo'].unsubscribe();
+  App.subscriptions['twitterUserInfo'] = App.createTwitterUserInfoSubscription(
+    userId, relation);
+};
+
+App.subscriptions['twitterUserInfo'] = App.createTwitterUserInfoSubscription(
+  userId, 'friends');
+
+
+$(window).load(function() {
   var $friendsBtn = $("#fn-friends");
   var $followersBtn = $("#fn-followers");
   var $relationText = $('.fn-relation-type-text');
 
-  // text
-  if (relationType == 'friends') {
-    updateRelationText('following');
-  } else {
-    updateRelationText(relationType);
+  function setRelationFlag(type) {
+    $('meta[name="fn-relation-type"]').attr('content', type);
   };
 
   function updateRelationText(relation) {
@@ -20,7 +26,6 @@ $(window).load(function() {
   function requestRelatedUsers(relationType, beforeExecute) {
     if (beforeExecute) beforeExecute();
 
-    // server request
     $.ajax({
       url: $('meta[name="fn-user-relations-url"]').attr('content'),
       data: { id: userId, relation_type: relationType }
@@ -31,24 +36,24 @@ $(window).load(function() {
     $('#fn-users-container').empty();
   };
 
-  function fetchFriends() {
+  function fetchFriends(e) {
     if ($(this).not(":checked").length) return;
 
     $followersBtn.prop('checked', false);
-    updateRelationText('friends');
+    changeChannelSubscriptionTo('friends');
     requestRelatedUsers('friends', beforeRequestRelatedUsers);
   };
 
-  function fetchFollowers() {
+  function fetchFollowers(e) {
     if ($(this).not(":checked").length) return;
 
     $friendsBtn.prop('checked', false);
-    updateRelationText('followers');
+    changeChannelSubscriptionTo('followers');
     requestRelatedUsers('followers', beforeRequestRelatedUsers);
   };
 
-  $($friendsBtn).change(fetchFriends);
-  $($followersBtn).change(fetchFollowers);
+  $friendsBtn.change(fetchFriends);
+  $followersBtn.change(fetchFollowers);
 
-  requestRelatedUsers(relationType);
+  requestRelatedUsers('friends');
 });

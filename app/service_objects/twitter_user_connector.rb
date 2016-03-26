@@ -42,7 +42,7 @@ class TwitterUserConnector
 
     users.map do |user|
       user.slice('id', 'name', 'screen_name', 'friends_count',
-                 'followers_count', 'profile_image_url')
+                 'followers_count', 'profile_image_url', 'statuses_count')
     end
   end
 

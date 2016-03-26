@@ -3,3 +3,4 @@
 
 @App ||= {}
 App.cable = ActionCable.createConsumer()
+App.subscriptions = [];

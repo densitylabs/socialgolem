@@ -4,7 +4,7 @@ class OauthController < ApplicationController
     user_info = enroller.authorize_user(session[:request_token],
                                         params[:oauth_verifier])
 
-    session[:user_id] = persist_user(user_info).id
+    cookies.signed[:user_id] = persist_user(user_info).id
     session[:request_token] = nil
 
     redirect_to root_path

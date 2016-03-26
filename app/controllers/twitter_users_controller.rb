@@ -3,7 +3,7 @@ class TwitterUsersController < ApplicationController
   end
 
   def relations
-    LoadRelatedTwitterUsersJob.new.perform(session[:user_id],
+    LoadRelatedTwitterUsersJob.new.perform(cookies.signed[:user_id],
                                            params[:id],
                                            params[:relation_type])
 

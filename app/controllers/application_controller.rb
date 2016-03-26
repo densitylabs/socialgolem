@@ -3,16 +3,16 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :require_authentication
-  helper_method :authenticated_user?
+  helper_method :authenticated_user
 
   private
 
   def connector
-    @connector ||= TwitterUserConnector.new(User.find(session[:user_id]))
+    @connector ||= TwitterUserConnector.new(User.find(cookies.signed[:user_id]))
   end
 
   def require_authentication
-    unless session[:user_id] || params[:oauth_verifier]
+    unless authenticated_user || params[:oauth_verifier]
       reset_session
       enroller = TwitterUserEnroller.new(TWITTER_CONF)
       session[:request_token] = enroller.request_token
@@ -21,7 +21,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def authenticated_user?
-    session[:user_id].present?
+  def authenticated_user
+    return unless cookies.signed[:user_id]
+
+    User.find_by(id: cookies.signed[:user_id])
   end
 end

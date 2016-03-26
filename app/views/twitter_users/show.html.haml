@@ -29,7 +29,7 @@
         .stats-holder
           .user-stats
             %strong Tweets
-            %span 1,337
+            %span <%= user['statuses_count'] %>
           .user-stats
             %strong Followings
             %span <%= user['friends_count'] %>
@@ -49,7 +49,7 @@
 
 %h2
   = "@#{params[:id]}'s"
-  %span.fn-relation-type-text
+  %span.fn-relation-type-text following
 
 %div#fn-users-container.fn-empty
   -# Initial state (replaced by content when it's fetched)
