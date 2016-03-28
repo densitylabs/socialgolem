@@ -19,12 +19,14 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
           $usersContainer.empty().removeClass('fn-empty');
         };
 
+        // console.log(data['users'].length);
+        // console.log(new Date().toLocaleString());
         for (var i = 0; i < data['users'].length; i++) {
           var user = data['users'][i];
 
-          $('head style').append('.' + user['screen_name']
-            + '::after{ background: url("' + user['profile_image_url']
-            + '") no-repeat center center/cover }');
+          // $('head style').append('.' + user['screen_name']
+          //   + '::after{ background: url("' + user['profile_image_url']
+          //   + '") no-repeat center center/cover }');
 
           $usersContainer.append(compiled_template({ user: user }));
         };
