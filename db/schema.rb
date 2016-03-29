@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160321231125) do
+ActiveRecord::Schema.define(version: 20160328195135) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "friendship_batch_changes", force: :cascade do |t|
     t.integer "user_id"
@@ -20,6 +23,15 @@ ActiveRecord::Schema.define(version: 20160321231125) do
     t.string  "status"
     t.text    "processed_twitter_users_ids"
     t.text    "unprocessed_twitter_users_ids"
+  end
+
+  create_table "twitter_users", force: :cascade do |t|
+    t.string  "twitter_id"
+    t.string  "screen_name"
+    t.integer "friends_count"
+    t.integer "followers_count"
+    t.integer "tweet_count"
+    t.string  "profile_image_url"
   end
 
   create_table "users", force: :cascade do |t|
