@@ -13,11 +13,30 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
       disconnected: function() {},
 
       received: function(data) {
+        var $loader = $('.fn-user-load-progress');
         var html_template = $('#fn-user-template');
         var compiled_template = _.template(html_template.html());
         var $usersContainer = $('#fn-users-container');
 
-        window.userCount = window.userCount + data['users'].length;
+        function updateLoader() {
+          var currentProgress = (window.userCount * 100) / window.usersTotal;
+
+          if (currentProgress < 100) {
+            $loader.find('.determinate')
+              .css('width', currentProgress + '%');
+          } else {
+            $loader.css('height', '0');
+          };
+        };
+
+        if (data['users_total'] != undefined) {
+          window.usersTotal = data['users_total'];
+        };
+
+        if (data['users']) {
+          window.userCount = window.userCount + data['users'].length;
+          updateLoader();
+        };
 
         // pagination
         $('.fn-pagination-container').pagination({
@@ -26,7 +45,7 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
             cssStyle: 'light-theme'
         });
 
-        if ($usersContainer.hasClass('fn-empty') == true) {
+        if ($usersContainer.hasClass('fn-empty') == true && data['users']) {
           $usersContainer.empty().removeClass('fn-empty');
 
           // console.log(data['users'].length);

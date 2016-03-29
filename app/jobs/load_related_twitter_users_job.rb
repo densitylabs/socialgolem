@@ -11,18 +11,22 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
     @twitter_user_id = twitter_user_id
     @relation = relation
 
-    broadcast_users_info
+    broadcast_users_total
+    delegate_fetch_of_users_info
   end
 
   private
 
-  def broadcast_users_info
-    ids = connector.relations_ids(twitter_user_id, relation)
+  def broadcast_users_total
+    ActionCable.server.broadcast(channel_id, users_total: twitter_users_ids.count)
+  end
+
+  def delegate_fetch_of_users_info
     # request only for the ids you don't know
     # find how many requests will be done
     # find what total represents the users that will be sent back to the frontend
 
-    ids.in_groups_of(100, false) do |group_of_ids|
+    twitter_users_ids.in_groups_of(100, false) do |group_of_ids|
       LimitedUsersInfoFinderJob.perform_later(
         authenticated_user_id: authenticated_user_id,
         twitter_user_id: twitter_user_id,
@@ -31,7 +35,15 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
     end
   end
 
+  def twitter_users_ids
+    @twitter_users_ids ||= connector.relations_ids(twitter_user_id, relation)
+  end
+
   def connector
     @connector ||= TwitterUserConnector.new(User.find(authenticated_user_id))
+  end
+
+  def channel_id
+    "twitter_user_info_#{authenticated_user_id}_#{twitter_user_id}_#{relation}"
   end
 end

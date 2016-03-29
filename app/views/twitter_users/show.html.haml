@@ -40,6 +40,11 @@
             %strong Followers
             %span <%= user['followers_count'] %>
 
+= content_for :head do
+  .loader-container(style='height: 4px')
+    .progress.fn-user-load-progress
+      .determinate(style='width: 0%')
+
 %div
   %form(action='#')
     %p
