@@ -35,6 +35,8 @@ class LimitedUsersInfoFinderJob < ActiveJob::Base
   end
 
   def persist_users
+    verified_on = Time.current
+
     TwitterUser.create(users.map do |user|
       { twitter_id: user['id'],
         name: user['name'],
@@ -42,7 +44,8 @@ class LimitedUsersInfoFinderJob < ActiveJob::Base
         friends_count: user['friends_count'],
         followers_count: user['followers_count'],
         tweet_count: user['statuses_count'],
-        profile_image_url: user['profile_image_url'] }
+        profile_image_url: user['profile_image_url'],
+        verified_on: verified_on }
     end)
   end
 

@@ -11,28 +11,38 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
     @twitter_user_id = twitter_user_id
     @relation = relation
 
-    broadcast_users_total
+    broadcast_initial_data
     delegate_fetch_of_users_info
   end
 
   private
 
-  def broadcast_users_total
-    ActionCable.server.broadcast(channel_id, users_total: twitter_users_ids.count)
+  def broadcast_initial_data
+    ActionCable.server.broadcast(
+      channel_id,
+      initial_message: 'true',
+      users_total: twitter_users_ids.count,
+      available_local_total: valid_local_users.count,
+      users: valid_local_users[0..49])
   end
 
   def delegate_fetch_of_users_info
-    # request only for the ids you don't know
-    # find how many requests will be done
-    # find what total represents the users that will be sent back to the frontend
-
-    twitter_users_ids.in_groups_of(100, false) do |group_of_ids|
-      LimitedUsersInfoFinderJob.perform_later(
+    twitter_users_ids_to_fetch.in_groups_of(100, false) do |group_of_ids|
+      LimitedUsersInfoFinderJob.new.perform(
         authenticated_user_id: authenticated_user_id,
         twitter_user_id: twitter_user_id,
         relation: relation,
         twitter_users_ids: group_of_ids)
     end
+  end
+
+  def twitter_users_ids_to_fetch
+    twitter_users_ids - valid_local_users.pluck(:twitter_id)
+  end
+
+  def valid_local_users
+    @valid_local_users ||= TwitterUser.where(twitter_id: twitter_users_ids)
+                                      .where('verified_on >= ?', 1.day.ago)
   end
 
   def twitter_users_ids

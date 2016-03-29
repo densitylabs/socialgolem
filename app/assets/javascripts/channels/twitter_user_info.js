@@ -1,4 +1,5 @@
 window.userCount = 0
+window.displayedUserCount = 0
 
 App.createTwitterUserInfoSubscription = function(userId, realtion){
   return App.cable.subscriptions.create(
@@ -18,6 +19,11 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
         var compiled_template = _.template(html_template.html());
         var $usersContainer = $('#fn-users-container');
 
+        function setCounters() {
+          window.usersTotal = data['users_total'];
+          window.userCount = window.userCount + data['available_local_total'];
+        };
+
         function updateLoader() {
           var currentProgress = (window.userCount * 100) / window.usersTotal;
 
@@ -29,27 +35,26 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
           };
         };
 
-        if (data['users_total'] != undefined) {
-          window.usersTotal = data['users_total'];
+        function updatePagination() {
+          $('.fn-pagination-container').pagination({
+              items: window.userCount,
+              itemsOnPage: 50,
+              cssStyle: 'light-theme'
+          });
         };
 
-        if (data['users']) {
+        if (data['initial_message'] != undefined) {
+          setCounters();
+        } else {
           window.userCount = window.userCount + data['users'].length;
-          updateLoader();
         };
 
-        // pagination
-        $('.fn-pagination-container').pagination({
-            items: window.userCount,
-            itemsOnPage: 50,
-            cssStyle: 'light-theme'
-        });
+        updateLoader();
+        updatePagination();
 
         if ($usersContainer.hasClass('fn-empty') == true && data['users']) {
           $usersContainer.empty().removeClass('fn-empty');
 
-          // console.log(data['users'].length);
-          // console.log(new Date().toLocaleString());
           if (data['users'].length > 50) {
             var loopSize = 50;
           } else {
@@ -58,10 +63,6 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
 
           for (var i = 0; i < loopSize; i++) {
             var user = data['users'][i];
-
-            // $('head style').append('.' + user['screen_name']
-            //   + '::after{ background: url("' + user['profile_image_url']
-            //   + '") no-repeat center center/cover }');
 
             $usersContainer.append(compiled_template({ user: user }));
           };
