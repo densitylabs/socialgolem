@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160328195135) do
+ActiveRecord::Schema.define(version: 20160329155413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,8 +25,17 @@ ActiveRecord::Schema.define(version: 20160328195135) do
     t.text    "unprocessed_twitter_users_ids"
   end
 
+  create_table "twitter_user_relations", force: :cascade do |t|
+    t.integer "friend_id"
+    t.integer "follower_id"
+  end
+
+  add_index "twitter_user_relations", ["follower_id"], name: "index_twitter_user_relations_on_follower_id", using: :btree
+  add_index "twitter_user_relations", ["friend_id"], name: "index_twitter_user_relations_on_friend_id", using: :btree
+
   create_table "twitter_users", force: :cascade do |t|
     t.string  "twitter_id"
+    t.string  "name"
     t.string  "screen_name"
     t.integer "friends_count"
     t.integer "followers_count"

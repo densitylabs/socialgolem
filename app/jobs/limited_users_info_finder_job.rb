@@ -10,23 +10,40 @@ class LimitedUsersInfoFinderJob < ActiveJob::Base
     @relation = opts[:relation]
     @twitter_users_ids = opts[:twitter_users_ids]
 
-    persist_users
+    associate_users(persist_users)
     broadcast_users
   end
 
   private
 
+  def user_id
+    @user_id ||= TwitterUser.find_by(screen_name: twitter_user_id).id
+  end
+
+  def associate_users(related_users)
+    if relation == 'friends'
+      TwitterUserRelation.create(
+        related_users.map { |related_user| relation_hash(user_id, related_user.id) })
+    else # followers
+      TwitterUserRelation.create(
+        related_users.map { |related_user| relation_hash(related_user.id, user_id) })
+    end
+  end
+
+  def relation_hash(follower_id, friend_id)
+    { follower_id: follower_id, friend_id: friend_id }
+  end
+
   def persist_users
-    TwitterUser.create(
-      users.map do |user|
-        { twitter_id: user['id'],
-          screen_name: user['name'],
-          friends_count: user['friends_count'],
-          followers_count: user['followers_count'],
-          tweet_count: user['statuses_count'],
-          profile_image_url: user['profile_image_url'] }
-      end
-    )
+    TwitterUser.create(users.map do |user|
+      { twitter_id: user['id'],
+        name: user['name'],
+        screen_name: user['screen_name'],
+        friends_count: user['friends_count'],
+        followers_count: user['followers_count'],
+        tweet_count: user['statuses_count'],
+        profile_image_url: user['profile_image_url'] }
+    end)
   end
 
   def broadcast_users

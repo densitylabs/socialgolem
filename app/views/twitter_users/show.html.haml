@@ -1,5 +1,6 @@
 - content_for :header do
-  = stylesheet_link_tag "twitter_card", media: "all"
+  = stylesheet_link_tag 'twitter_card', media: 'all'
+  = stylesheet_link_tag 'simplePagination'
 
   %meta(name='fn-user-relations-url' content=relations_twitter_user_path)
   %meta(name='fn-relation-type' content='friends')
@@ -7,6 +8,8 @@
   = javascript_include_tag 'cable'
   = javascript_include_tag 'channels/twitter_user_info'
   = javascript_include_tag 'twitter_users/show'
+
+  = javascript_include_tag 'jquery.simplePagination'
 
   :css
     .twitter-card-container {
@@ -50,6 +53,8 @@
 %h2
   = "@#{params[:id]}'s"
   %span.fn-relation-type-text following
+
+.fn-pagination-container
 
 %div#fn-users-container.fn-empty
   -# Initial state (replaced by content when it's fetched)

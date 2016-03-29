@@ -1,3 +1,5 @@
+window.userCount = 0
+
 App.createTwitterUserInfoSubscription = function(userId, realtion){
   return App.cable.subscriptions.create(
     {
@@ -15,20 +17,35 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
         var compiled_template = _.template(html_template.html());
         var $usersContainer = $('#fn-users-container');
 
+        window.userCount = window.userCount + data['users'].length;
+
+        // pagination
+        $('.fn-pagination-container').pagination({
+            items: window.userCount,
+            itemsOnPage: 50,
+            cssStyle: 'light-theme'
+        });
+
         if ($usersContainer.hasClass('fn-empty') == true) {
           $usersContainer.empty().removeClass('fn-empty');
-        };
 
-        // console.log(data['users'].length);
-        // console.log(new Date().toLocaleString());
-        for (var i = 0; i < data['users'].length; i++) {
-          var user = data['users'][i];
+          // console.log(data['users'].length);
+          // console.log(new Date().toLocaleString());
+          if (data['users'].length > 50) {
+            var loopSize = 50;
+          } else {
+            var loopSize = data['users'].length;
+          };
 
-          // $('head style').append('.' + user['screen_name']
-          //   + '::after{ background: url("' + user['profile_image_url']
-          //   + '") no-repeat center center/cover }');
+          for (var i = 0; i < loopSize; i++) {
+            var user = data['users'][i];
 
-          $usersContainer.append(compiled_template({ user: user }));
+            // $('head style').append('.' + user['screen_name']
+            //   + '::after{ background: url("' + user['profile_image_url']
+            //   + '") no-repeat center center/cover }');
+
+            $usersContainer.append(compiled_template({ user: user }));
+          };
         };
       }
     }
