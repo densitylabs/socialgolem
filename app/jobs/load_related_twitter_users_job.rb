@@ -24,7 +24,7 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
       initial_message: 'true',
       users_total: twitter_users_ids.count,
       available_local_total: valid_local_users.count,
-      users: users)
+      users: valid_local_users[0..49])
   end
 
   def delegate_fetch_of_users_info
@@ -50,7 +50,6 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
     user_id = user.id
 
     if relation == 'friends'
-      binding.pry
       TwitterUserRelation.create(
         (valid_local_users.pluck(:id) - user.friends.pluck(:id)).map do |friend_id|
           { from_id: user_id, to_id: friend_id }
@@ -62,14 +61,6 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
           { from_id: follower_id, to_id: user_id }
         end
       )
-    end
-  end
-
-  def users
-    if relation == 'friends'
-      user.friends_by('followers_count')
-    else # followers
-      user.followers_by('followers_count')
     end
   end
 

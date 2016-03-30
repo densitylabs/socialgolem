@@ -5,6 +5,7 @@
   %meta(name='fn-user-relations-url' content=relations_twitter_user_path)
   %meta(name='fn-filter-related-users-url' content="#{filter_related_users_twitter_user_path(id: @user.id)}")
   %meta(name='fn-relation-type' content='friends')
+  %meta(name='fn-users-per-page' content='50')
 
   = javascript_include_tag 'cable'
   = javascript_include_tag 'channels/twitter_user_info'
@@ -67,6 +68,7 @@
 
       .fn-filter-control-container.input-field.row.col.s12.m6
         %select#fn-filter-control
+          %option(disabled selected) Select an option
           %option(value='followers_count') Follower count
           %option(value='friends_count') Following count
           %option(value='statuses_count') Tweet count
@@ -85,5 +87,4 @@
       .circle-clipper.right
         .circle
 
-%div#fn-users-container.fn-empty
-  %br
+%div#fn-users-container

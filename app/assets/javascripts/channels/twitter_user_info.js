@@ -14,6 +14,8 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
       disconnected: function() {},
 
       received: function(data) {
+        var userLimit = $('meta[name="fn-users-per-page"]').attr('content');
+
         var $loader = $('.fn-user-load-progress');
         var $internalLoader = $('.fn-loader-container');
 
@@ -41,17 +43,19 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
         };
 
         function renderUsers(users) {
+          amountOfUsersToPrint = userLimit - window.displayedUserCount;
+          if (amountOfUsersToPrint <= 0) return false;
+
           $internalLoader.fadeOut('fast');
 
-          if (users.length > 50) {
-            var loopSize = 50;
+          if (users.length >= amountOfUsersToPrint) {
+            var loopSize = amountOfUsersToPrint;
           } else {
             var loopSize = users.length;
           };
 
           for (var i = 0; i < loopSize; i++) {
             var user = users[i];
-
             $usersContainer.append(compiled_template({ user: user }));
           };
         };
@@ -82,7 +86,7 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
           });
         };
 
-        function unfreezeControls() {
+        function enableControls() {
           $('.fn-form').fadeIn('fast');
 
           $relationControl.material_select();
@@ -95,10 +99,6 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
           window.usersTotal = data['users_total'];
           window.userCount = window.userCount + data['available_local_total'];
 
-          $internalLoader.fadeOut('fast');
-          $usersContainer.removeClass('fn-empty');
-
-          renderUsers(data['users']);
         };
 
         function allUsersFetched() {
@@ -111,7 +111,9 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
           window.userCount = window.userCount + data['users'].length;
         };
 
-        if (allUsersFetched()) unfreezeControls();
+        renderUsers(data['users']);
+
+        if (allUsersFetched()) enableControls();
 
         updateLoader(window.userCount);
         updatePagination(window.userCount);
