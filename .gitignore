@@ -22,3 +22,4 @@ config/twitter_conf.yml
 config/database.yml
 
 tags
+coverage/
