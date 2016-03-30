@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 20160329195830) do
     t.string   "screen_name"
     t.integer  "friends_count"
     t.integer  "followers_count"
-    t.integer  "tweet_count"
+    t.integer  "statuses_count"
     t.string   "profile_image_url"
     t.datetime "verified_on"
   end

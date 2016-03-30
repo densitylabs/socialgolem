@@ -43,7 +43,7 @@ class LimitedUsersInfoFinderJob < ActiveJob::Base
         screen_name: user['screen_name'],
         friends_count: user['friends_count'],
         followers_count: user['followers_count'],
-        tweet_count: user['statuses_count'],
+        statuses_count: user['statuses_count'],
         profile_image_url: user['profile_image_url'],
         verified_on: verified_on }
     end)

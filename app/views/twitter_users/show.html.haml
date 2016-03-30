@@ -61,19 +61,28 @@
     .row
       .input-field.row.col.s12.m6
         %select#fn-relation-control
-          %option{:value => "1"} Friends
-          %option{:value => "2"} Followers
+          %option(value='friends') Following
+          %option(value='followers') Followers
         %label Show
 
       .input-field.row.col.s12.m6
         %select#fn-filter-control
-          %option{:value => "1"} Following count
-          %option{:value => "2"} Followers count
-          %option{:value => "1"} Tweet count
+          %option(disabled selected) Choose an option
+          %option(value='friends_count') Following count
+          %option(value='followers_count') Followers count
+          %option(value='statuses_count') Tweet count
         %label Order by
 
 .fn-pagination-container
 
 %div#fn-users-container.fn-empty
-  -# Initial state (replaced by content when it's fetched)
-  %p No users found
+  %br
+  .center
+    .preloader-wrapper.active
+      .spinner-layer.spinner-red-only
+        .circle-clipper.left
+          .circle
+        .gap-patch
+          .circle
+        .circle-clipper.right
+          .circle

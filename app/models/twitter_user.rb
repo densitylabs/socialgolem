@@ -6,7 +6,7 @@ class TwitterUser < ActiveRecord::Base
   has_many :relations_to, class_name: 'TwitterUserRelation', foreign_key: :to_id
   has_many :followers, through: :relations_to
 
-  VALID_PATTERNS = [:tweet_count, :friends_count, :followers_count].freeze
+  VALID_PATTERNS = [:statuses_count, :friends_count, :followers_count].freeze
 
   def friends_by(pattern, order_direction = :desc, limit = 50)
     validate_search_pattern(pattern)

@@ -26,7 +26,7 @@ class OauthController < ApplicationController
       screen_name: twitter_user_info['screen_name'],
       friends_count: twitter_user_info['friends_count'],
       followers_count: twitter_user_info['followers_count'],
-      tweet_count: twitter_user_info['statuses_count'],
+      statuses_count: twitter_user_info['statuses_count'],
       profile_image_url: twitter_user_info['profile_image_url'])
   end
 end
