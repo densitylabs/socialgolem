@@ -20,16 +20,14 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
         var $relationControl = $('#fn-relation-control');
         var $filterControl = $('#fn-filter-control');
 
+        var $pagination = $('.fn-pagination');
+
         var $usersContainer = $('#fn-users-container');
         var html_template = $('#fn-user-template');
         var compiled_template = _.template(html_template.html());
 
-        var filterRelatedUsersURL = $('meta[name="fn-filter-related-users-url"]').attr('content');
-
-        function setCounters() {
-          window.usersTotal = data['users_total'];
-          window.userCount = window.userCount + data['available_local_total'];
-        };
+        var filterRelatedUsersURL = $('meta[name="fn-filter-related-users-url"]')
+                                      .attr('content');
 
         function updateLoader() {
           var currentProgress = (window.userCount * 100) / window.usersTotal;
@@ -76,7 +74,7 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
         };
 
         function updatePagination() {
-          $('.fn-pagination-container').pagination({
+          $pagination.pagination({
               items: window.userCount,
               itemsOnPage: 50,
               cssStyle: 'light-theme',
@@ -84,21 +82,39 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
           });
         };
 
-        if (data['initial_message'] != undefined) {
-          setCounters();
-        } else {
-          window.userCount = window.userCount + data['users'].length;
+        function unfreezeControls() {
+          $('.fn-form').fadeIn('fast');
+
+          $relationControl.material_select();
+          $filterControl.material_select();
+
+          $pagination.parent().fadeIn('fast');
         };
 
-        updateLoader();
-        updatePagination();
+        function reactToInitialMessage() {
+          window.usersTotal = data['users_total'];
+          window.userCount = window.userCount + data['available_local_total'];
 
-        if ($usersContainer.hasClass('fn-empty') == true && data['users']) {
           $internalLoader.fadeOut('fast');
           $usersContainer.removeClass('fn-empty');
 
           renderUsers(data['users']);
         };
+
+        function allUsersFetched() {
+          return window.usersTotal == window.userCount;
+        };
+
+        if (data['initial_message'] != undefined) {
+          reactToInitialMessage();
+        } else {
+          window.userCount = window.userCount + data['users'].length;
+        };
+
+        if (allUsersFetched()) unfreezeControls();
+
+        updateLoader(window.userCount);
+        updatePagination(window.userCount);
       }
     }
   );

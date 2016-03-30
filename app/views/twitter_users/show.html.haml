@@ -57,22 +57,23 @@
 %br
 
 %div
-  %form.col.s12(action='#')
+  %form.col.s12.fn-form(action='#' style='display: none;')
     .row
-      .input-field.row.col.s12.m6
+      .fn-relation-control-container.input-field.row.col.s12.m6
         %select#fn-relation-control
           %option(value='friends') Following
           %option(value='followers') Followers
         %label Show
 
-      .input-field.row.col.s12.m6
+      .fn-filter-control-container.input-field.row.col.s12.m6
         %select#fn-filter-control
-          %option(value='followers_count') Followers count
+          %option(value='followers_count') Follower count
           %option(value='friends_count') Following count
           %option(value='statuses_count') Tweet count
         %label Order by
 
-.fn-pagination-container
+.fn-pagination-container(style='display: none;')
+  .fn-pagination
 
 .fn-loader-container.center
   .preloader-wrapper.active

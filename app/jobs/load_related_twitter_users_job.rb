@@ -11,6 +11,7 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
     @twitter_user_id = twitter_user_id
     @relation = relation
 
+    associate_existent_users
     broadcast_initial_data
     delegate_fetch_of_users_info
   end
@@ -23,7 +24,7 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
       initial_message: 'true',
       users_total: twitter_users_ids.count,
       available_local_total: valid_local_users.count,
-      users: valid_local_users[0..49])
+      users: users)
   end
 
   def delegate_fetch_of_users_info
@@ -43,6 +44,37 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
   def valid_local_users
     @valid_local_users ||= TwitterUser.where(twitter_id: twitter_users_ids)
                                       .where('verified_on >= ?', 1.day.ago)
+  end
+
+  def associate_existent_users
+    user_id = user.id
+
+    if relation == 'friends'
+      binding.pry
+      TwitterUserRelation.create(
+        (valid_local_users.pluck(:id) - user.friends.pluck(:id)).map do |friend_id|
+          { from_id: user_id, to_id: friend_id }
+        end
+      )
+    else # followers
+      TwitterUserRelation.create(
+        (valid_local_users.pluck(:id) - user.followers.pluck(:id)).map do |follower_id|
+          { from_id: follower_id, to_id: user_id }
+        end
+      )
+    end
+  end
+
+  def users
+    if relation == 'friends'
+      user.friends_by('followers_count')
+    else # followers
+      user.followers_by('followers_count')
+    end
+  end
+
+  def user
+    @user_id ||= TwitterUser.find_by(screen_name: twitter_user_id)
   end
 
   def twitter_users_ids

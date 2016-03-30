@@ -11,9 +11,6 @@ App.subscriptions['twitterUserInfo'] = App.createTwitterUserInfoSubscription(
   userId, 'friends');
 
 $(window).load(function() {
-  $('#fn-relation-control').material_select();
-  $('#fn-filter-control').material_select();
-
   // var $friendsBtn = $("#fn-friends");
   // var $followersBtn = $("#fn-followers");
   // var $relationText = $('.fn-relation-type-text');
