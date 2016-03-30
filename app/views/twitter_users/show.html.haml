@@ -3,6 +3,7 @@
   = stylesheet_link_tag 'simplePagination'
 
   %meta(name='fn-user-relations-url' content=relations_twitter_user_path)
+  %meta(name='fn-filter-related-users-url' content="#{filter_related_users_twitter_user_path(id: @user.id)}")
   %meta(name='fn-relation-type' content='friends')
 
   = javascript_include_tag 'cable'
@@ -52,7 +53,6 @@
 %h6
   = params[:id]
   profile
-  %span.fn-relation-type-text
 
 %br
 
@@ -67,22 +67,22 @@
 
       .input-field.row.col.s12.m6
         %select#fn-filter-control
-          %option(disabled selected) Choose an option
-          %option(value='friends_count') Following count
           %option(value='followers_count') Followers count
+          %option(value='friends_count') Following count
           %option(value='statuses_count') Tweet count
         %label Order by
 
 .fn-pagination-container
 
+.fn-loader-container.center
+  .preloader-wrapper.active
+    .spinner-layer.spinner-red-only
+      .circle-clipper.left
+        .circle
+      .gap-patch
+        .circle
+      .circle-clipper.right
+        .circle
+
 %div#fn-users-container.fn-empty
   %br
-  .center
-    .preloader-wrapper.active
-      .spinner-layer.spinner-red-only
-        .circle-clipper.left
-          .circle
-        .gap-patch
-          .circle
-        .circle-clipper.right
-          .circle

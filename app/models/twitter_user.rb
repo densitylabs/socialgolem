@@ -6,23 +6,17 @@ class TwitterUser < ActiveRecord::Base
   has_many :relations_to, class_name: 'TwitterUserRelation', foreign_key: :to_id
   has_many :followers, through: :relations_to
 
-  VALID_PATTERNS = [:statuses_count, :friends_count, :followers_count].freeze
+  SUPPORTED_SEARCH_PATTERNS = ['statuses_count', 'friends_count', 'followers_count'].freeze
 
-  def friends_by(pattern, order_direction = :desc, limit = 50)
-    validate_search_pattern(pattern)
-    friends.order(pattern => order_direction).limit(limit)
+  def friends_by(pattern, page = 1, order_direction = :desc, per_page = 50)
+    friends.order(pattern => order_direction)
+           .limit(per_page)
+           .offset(per_page * ([page.to_i, 1].max - 1))
   end
 
-  def followers_by(pattern, order_direction = :desc, limit = 50)
-    validate_search_pattern(pattern)
-    followers.order(pattern => order_direction).limit(limit)
-  end
-
-  private
-
-  def validate_search_pattern(pattern)
-    unless VALID_PATTERNS.include?(pattern)
-      fail "Invalid search pattern. Use #{VALID_PATTERNS.inspect}."
-    end
+  def followers_by(pattern, page = 1, order_direction = :desc, per_page = 50)
+    followers.order(pattern => order_direction)
+             .limit(per_page)
+             .offset(per_page * ([page.to_i, 1].max - 1))
   end
 end

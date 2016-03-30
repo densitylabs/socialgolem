@@ -1,5 +1,6 @@
 window.userId = window.location.pathname.split('/')[2];
 
+// Subscription to ActionCable
 function changeChannelSubscriptionTo(relation) {
   App.subscriptions['twitterUserInfo'].unsubscribe();
   App.subscriptions['twitterUserInfo'] = App.createTwitterUserInfoSubscription(
