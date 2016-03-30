@@ -1,5 +1,7 @@
 # README
-
+[![Code Climate](https://codeclimate.com/github/densitylabs/socialgolem/badges/gpa.svg)](https://codeclimate.com/github/densitylabs/socialgolem)
+[![Test Coverage](https://codeclimate.com/github/densitylabs/socialgolem/badges/coverage.svg)](https://codeclimate.com/github/densitylabs/socialgolem/coverage)
+[![Issue Count](https://codeclimate.com/github/densitylabs/socialgolem/badges/issue_count.svg)](https://codeclimate.com/github/densitylabs/socialgolem)
 ## App setup
 
 - Clone the repo
