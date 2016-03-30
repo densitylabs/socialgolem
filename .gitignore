@@ -20,6 +20,7 @@ dump.rdb
 
 config/twitter_conf.yml
 config/database.yml
+config/application.yml
 
 tags
 coverage/
