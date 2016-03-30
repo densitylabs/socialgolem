@@ -10,6 +10,10 @@
   = javascript_include_tag 'twitter_users/show'
 
   = javascript_include_tag 'jquery.simplePagination'
+  = javascript_include_tag 'materialize/js/global'
+  = javascript_include_tag 'materialize/js/forms'
+  = javascript_include_tag 'materialize/js/dropdown'
+  = javascript_include_tag 'materialize/js/jquery.easing.1.3'
 
   :css
     .twitter-card-container {
@@ -45,19 +49,28 @@
     .progress.fn-user-load-progress
       .determinate(style='width: 0%')
 
+%h6
+  = params[:id]
+  profile
+  %span.fn-relation-type-text
+
+%br
+
 %div
-  %form(action='#')
-    %p
-      %input#fn-friends.filled-in(checked='checked' type='checkbox')
-      %label(for='fn-friends') Following
-    %p
-      %input#fn-followers.filled-in(type='checkbox')
-      %label(for='fn-followers') Followers
+  %form.col.s12(action='#')
+    .row
+      .input-field.row.col.s12.m6
+        %select#fn-relation-control
+          %option{:value => "1"} Friends
+          %option{:value => "2"} Followers
+        %label Show
 
-
-%h2
-  = "@#{params[:id]}'s"
-  %span.fn-relation-type-text following
+      .input-field.row.col.s12.m6
+        %select#fn-filter-control
+          %option{:value => "1"} Following count
+          %option{:value => "2"} Followers count
+          %option{:value => "1"} Tweet count
+        %label Order by
 
 .fn-pagination-container
 

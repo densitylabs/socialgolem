@@ -19,4 +19,9 @@ Rails.application.config.assets.precompile += %w(
   channels/twitter_user_info.js
   twitter_users/show.js
   jquery.simplePagination.js
+  materialize/js/global.js
+  materialize/js/forms.js
+  materialize/js/dropdown.js
+  materialize/js/easing.js
+  materialize/js/jquery.easing.1.3
 )

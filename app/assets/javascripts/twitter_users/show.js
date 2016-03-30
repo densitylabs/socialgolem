@@ -56,4 +56,7 @@ $(window).load(function() {
   $followersBtn.change(fetchFollowers);
 
   requestRelatedUsers('friends');
+
+  $('#fn-relation-control').material_select();
+  $('#fn-filter-control').material_select();
 });

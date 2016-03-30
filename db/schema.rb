@@ -26,12 +26,12 @@ ActiveRecord::Schema.define(version: 20160329195830) do
   end
 
   create_table "twitter_user_relations", force: :cascade do |t|
-    t.integer "friend_id"
-    t.integer "follower_id"
+    t.integer "from_id"
+    t.integer "to_id"
   end
 
-  add_index "twitter_user_relations", ["follower_id"], name: "index_twitter_user_relations_on_follower_id", using: :btree
-  add_index "twitter_user_relations", ["friend_id"], name: "index_twitter_user_relations_on_friend_id", using: :btree
+  add_index "twitter_user_relations", ["from_id"], name: "index_twitter_user_relations_on_from_id", using: :btree
+  add_index "twitter_user_relations", ["to_id"], name: "index_twitter_user_relations_on_to_id", using: :btree
 
   create_table "twitter_users", force: :cascade do |t|
     t.integer  "twitter_id",        limit: 8

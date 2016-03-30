@@ -31,7 +31,7 @@ class LimitedUsersInfoFinderJob < ActiveJob::Base
   end
 
   def relation_hash(follower_id, friend_id)
-    { follower_id: follower_id, friend_id: friend_id }
+    { from_id: follower_id, to_id: friend_id }
   end
 
   def persist_users
