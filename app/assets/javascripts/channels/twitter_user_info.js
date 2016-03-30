@@ -17,6 +17,9 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
         var $loader = $('.fn-user-load-progress');
         var $internalLoader = $('.fn-loader-container');
 
+        var $relationControl = $('#fn-relation-control');
+        var $filterControl = $('#fn-filter-control');
+
         var $usersContainer = $('#fn-users-container');
         var html_template = $('#fn-user-template');
         var compiled_template = _.template(html_template.html());
@@ -56,15 +59,15 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
         };
 
         function fetchUsersInPage(pageNumber, event) {
-          $usersContainer.empty().removeClass('fn-empty');
+          $usersContainer.empty();
           $internalLoader.fadeIn('fast');
 
           $.ajax({
             url: filterRelatedUsersURL,
             data: {
               page: pageNumber,
-              related_users: 'friends',
-              pattern: 'followers_count',
+              related_users: $relationControl.val(),
+              pattern: $filterControl.val(),
               user_id: userId
             }
           })
@@ -92,19 +95,9 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
 
         if ($usersContainer.hasClass('fn-empty') == true && data['users']) {
           $internalLoader.fadeOut('fast');
-          $usersContainer.empty().removeClass('fn-empty');
+          $usersContainer.removeClass('fn-empty');
 
-          if (data['users'].length > 50) {
-            var loopSize = 50;
-          } else {
-            var loopSize = data['users'].length;
-          };
-
-          for (var i = 0; i < loopSize; i++) {
-            var user = data['users'][i];
-
-            $usersContainer.append(compiled_template({ user: user }));
-          };
+          renderUsers(data['users']);
         };
       }
     }

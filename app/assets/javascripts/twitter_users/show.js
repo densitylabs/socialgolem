@@ -10,19 +10,13 @@ function changeChannelSubscriptionTo(relation) {
 App.subscriptions['twitterUserInfo'] = App.createTwitterUserInfoSubscription(
   userId, 'friends');
 
-
 $(window).load(function() {
-  var $friendsBtn = $("#fn-friends");
-  var $followersBtn = $("#fn-followers");
-  var $relationText = $('.fn-relation-type-text');
+  $('#fn-relation-control').material_select();
+  $('#fn-filter-control').material_select();
 
-  function setRelationFlag(type) {
-    $('meta[name="fn-relation-type"]').attr('content', type);
-  };
-
-  function updateRelationText(relation) {
-    $relationText.text(relation);
-  }
+  // var $friendsBtn = $("#fn-friends");
+  // var $followersBtn = $("#fn-followers");
+  // var $relationText = $('.fn-relation-type-text');
 
   function requestRelatedUsers(relationType, beforeExecute) {
     if (beforeExecute) beforeExecute();
@@ -37,27 +31,26 @@ $(window).load(function() {
     $('#fn-users-container').empty();
   };
 
-  function fetchFriends(e) {
-    if ($(this).not(":checked").length) return;
+  // function fetchFriends(e) {
+  //   if ($(this).not(":checked").length) return;
+  //
+  //   $followersBtn.prop('checked', false);
+  //   changeChannelSubscriptionTo('friends');
+  //   requestRelatedUsers('friends', beforeRequestRelatedUsers);
+  // };
+  //
+  // function fetchFollowers(e) {
+  //   if ($(this).not(":checked").length) return;
+  //
+  //   $friendsBtn.prop('checked', false);
+  //   changeChannelSubscriptionTo('followers');
+  //   requestRelatedUsers('followers', beforeRequestRelatedUsers);
+  // };
+  //
+  // $friendsBtn.change(fetchFriends);
+  // $followersBtn.change(fetchFollowers);
 
-    $followersBtn.prop('checked', false);
-    changeChannelSubscriptionTo('friends');
-    requestRelatedUsers('friends', beforeRequestRelatedUsers);
-  };
+  requestRelatedUsers('friends', beforeRequestRelatedUsers);
 
-  function fetchFollowers(e) {
-    if ($(this).not(":checked").length) return;
-
-    $friendsBtn.prop('checked', false);
-    changeChannelSubscriptionTo('followers');
-    requestRelatedUsers('followers', beforeRequestRelatedUsers);
-  };
-
-  $friendsBtn.change(fetchFriends);
-  $followersBtn.change(fetchFollowers);
-
-  requestRelatedUsers('friends');
-
-  $('#fn-relation-control').material_select();
-  $('#fn-filter-control').material_select();
+  // $('#fn-filter-control').change(fetchRelation);
 });
