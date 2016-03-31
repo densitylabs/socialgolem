@@ -117,6 +117,10 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
 
         updateLoader(window.userCount);
         updatePagination(window.userCount);
+
+        $filterControl.change(function(){
+          fetchUsersInPage(1);
+        });
       }
     }
   );

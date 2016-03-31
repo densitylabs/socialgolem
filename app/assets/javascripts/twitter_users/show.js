@@ -14,7 +14,6 @@ App.subscriptions['twitterUserInfo'] = App.createTwitterUserInfoSubscription(
 
 $(window).load(function() {
   var $relationControl = $('#fn-relation-control');
-  var $filterControl = $('#fn-filter-control');
 
   var urlWithoutParams = location.protocol + '//' + location.host + location.pathname;
 
