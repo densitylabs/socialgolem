@@ -6,6 +6,7 @@
   %meta(name='fn-filter-related-users-url' content="#{filter_related_users_twitter_user_path(id: @user.id)}")
   %meta(name='fn-relation-type' content='friends')
   %meta(name='fn-users-per-page' content='50')
+  %meta(name='fn-relation' content="#{params[:relation]}")
 
   = javascript_include_tag 'cable'
   = javascript_include_tag 'channels/twitter_user_info'
@@ -61,9 +62,7 @@
   %form.col.s12.fn-form(action='#' style='display: none;')
     .row
       .fn-relation-control-container.input-field.row.col.s12.m6
-        %select#fn-relation-control
-          %option(value='friends') Following
-          %option(value='followers') Followers
+        = select_tag 'fn-relation-control', options_for_select([["Following", "friends"], ["Followers", "followers"]], (params[:relation] || 'friends'))
         %label Show
 
       .fn-filter-control-container.input-field.row.col.s12.m6

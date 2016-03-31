@@ -27,6 +27,8 @@ class TwitterUsersController < ApplicationController
   private
 
   def validate_search_pattern
+    return params[:pattern] = :id if params[:pattern].blank?
+
     unless TwitterUser::SUPPORTED_SEARCH_PATTERNS.include?(params[:pattern])
       return render text: "Invalid search pattern. Use #{VALID_PATTERNS.inspect}.",
                     status: 403

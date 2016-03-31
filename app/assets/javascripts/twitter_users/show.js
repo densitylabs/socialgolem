@@ -7,13 +7,16 @@ function changeChannelSubscriptionTo(relation) {
     userId, relation);
 };
 
+var relation = document.head.querySelector("[name=fn-relation").content || 'friends';
+
 App.subscriptions['twitterUserInfo'] = App.createTwitterUserInfoSubscription(
-  userId, 'friends');
+  userId, relation);
 
 $(window).load(function() {
-  // var $friendsBtn = $("#fn-friends");
-  // var $followersBtn = $("#fn-followers");
-  // var $relationText = $('.fn-relation-type-text');
+  var $relationControl = $('#fn-relation-control');
+  var $filterControl = $('#fn-filter-control');
+
+  var urlWithoutParams = location.protocol + '//' + location.host + location.pathname;
 
   function requestRelatedUsers(relationType, beforeExecute) {
     if (beforeExecute) beforeExecute();
@@ -28,26 +31,12 @@ $(window).load(function() {
     $('#fn-users-container').empty();
   };
 
-  // function fetchFriends(e) {
-  //   if ($(this).not(":checked").length) return;
-  //
-  //   $followersBtn.prop('checked', false);
-  //   changeChannelSubscriptionTo('friends');
-  //   requestRelatedUsers('friends', beforeRequestRelatedUsers);
-  // };
-  //
-  // function fetchFollowers(e) {
-  //   if ($(this).not(":checked").length) return;
-  //
-  //   $friendsBtn.prop('checked', false);
-  //   changeChannelSubscriptionTo('followers');
-  //   requestRelatedUsers('followers', beforeRequestRelatedUsers);
-  // };
-  //
-  // $friendsBtn.change(fetchFriends);
-  // $followersBtn.change(fetchFollowers);
+  function navigateToRelation() {
+    newUrl = urlWithoutParams + '?relation=' + $(this).val();
+    window.location.replace(newUrl);
+  };
 
-  requestRelatedUsers('friends', beforeRequestRelatedUsers);
+  $relationControl.change(navigateToRelation);
 
-  // $('#fn-filter-control').change(fetchRelation);
+  requestRelatedUsers(relation, beforeRequestRelatedUsers);
 });
