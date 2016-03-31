@@ -8,6 +8,10 @@ class TwitterUserConnector
     @unprocessed_twitter_users_ids = []
   end
 
+  def screen_name
+    @user.screen_name
+  end
+
   def unfriendly_users
     fetch_users_based_on_ids(unfriendly_users_ids)
   end

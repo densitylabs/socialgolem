@@ -26,4 +26,10 @@ class ApplicationController < ActionController::Base
 
     User.find_by(id: cookies.signed[:user_id])
   end
+
+  def current_twitter_user_path
+    twitter_user_path(connector.screen_name)
+  end
+
+  helper_method :current_twitter_user_path
 end
