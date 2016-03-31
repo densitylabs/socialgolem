@@ -29,7 +29,7 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
 
   def delegate_fetch_of_users_info
     twitter_users_ids_to_fetch.in_groups_of(100, false) do |group_of_ids|
-      LimitedUsersInfoFinderJob.new.perform(
+      LimitedUsersInfoFinderJob.perform_later(
         authenticated_user_id: authenticated_user_id,
         twitter_user_id: twitter_user_id,
         relation: relation,
@@ -42,8 +42,8 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
   end
 
   def valid_local_users
-    @valid_local_users ||= TwitterUser.where(twitter_id: twitter_users_ids)
-                                      .where('verified_on >= ?', 1.day.ago)
+    TwitterUser.where(twitter_id: twitter_users_ids)
+               .where('verified_on >= ?', 1.day.ago)
   end
 
   def associate_existent_users

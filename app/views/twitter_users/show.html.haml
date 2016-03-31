@@ -7,6 +7,7 @@
   %meta(name='fn-relation-type' content='friends')
   %meta(name='fn-users-per-page' content='51')
   %meta(name='fn-relation' content="#{params[:relation]}")
+  %meta(name='fn-url-follow-user' content=follow_user_twitter_users_path)
 
   = javascript_include_tag 'cable'
   = javascript_include_tag 'channels/twitter_user_info'
@@ -34,7 +35,7 @@
       .card-profile_user-infos
         %span.infos_name <%= user['name'] %>
         %span.infos_nick @<%= user['screen_name'] %>
-        %a(href='#')
+        %a.fn-follow(href='<%= user["twitter_id"] %>')
       .card-profile_user-stats
         .stats-holder
           .user-stats

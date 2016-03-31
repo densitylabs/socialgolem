@@ -61,6 +61,11 @@ class TwitterUserConnector
     end
   end
 
+  def friend(id)
+    client.friend(id)
+    user.add_friend(id)
+  end
+
   private
 
   def client

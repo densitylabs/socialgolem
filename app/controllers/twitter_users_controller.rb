@@ -17,11 +17,15 @@ class TwitterUsersController < ApplicationController
   end
 
   def relations
-    LoadRelatedTwitterUsersJob.new.perform(cookies.signed[:user_id],
-                                           params[:id],
-                                           params[:relation_type])
+    LoadRelatedTwitterUsersJob.perform_later(cookies.signed[:user_id],
+                                             params[:id],
+                                             params[:relation_type])
 
     render plain: 'Users being fetched in the background. Expect broadcast message.'
+  end
+
+  def follow_user
+    connector.friend(params[:id])
   end
 
   private

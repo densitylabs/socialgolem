@@ -8,4 +8,14 @@ class User < ActiveRecord::Base
     user.update_attributes!(fields)
     user
   end
+
+  def add_friend(id)
+    TwitterUserRelation.create(from_id: twitter_user.id, to_id: id)
+  end
+
+  private
+
+  def twitter_user
+    @twitter_user ||= TwitterUser.find_by(screen_name: screen_name)
+  end
 end
