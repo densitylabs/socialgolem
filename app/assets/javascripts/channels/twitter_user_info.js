@@ -77,10 +77,11 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
           // .fail(onFail)
         };
 
+        console.log(userLimit);
         function updatePagination() {
           $pagination.pagination({
               items: window.userCount,
-              itemsOnPage: 50,
+              itemsOnPage: userLimit,
               cssStyle: 'light-theme',
               onPageClick: fetchUsersInPage
           });

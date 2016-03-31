@@ -24,7 +24,7 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
       initial_message: 'true',
       users_total: twitter_users_ids.count,
       available_local_total: valid_local_users.count,
-      users: valid_local_users[0..49])
+      users: valid_local_users[0..50])
   end
 
   def delegate_fetch_of_users_info
