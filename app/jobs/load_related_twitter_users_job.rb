@@ -43,6 +43,8 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
   end
 
   def twitter_users_ids_to_fetch
+    return [] if visited_twitter_user.verified_on >= 1.day.ago
+
     twitter_users_ids - valid_local_users.pluck(:twitter_id)
   end
 
@@ -56,13 +58,13 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
 
     if relation == 'friends'
       TwitterUserRelation.create(
-        (valid_local_users.pluck(:id) - visited_user.friends.pluck(:id)).map do |friend_id|
+        (valid_local_users.pluck(:id) - visited_twitter_user.friends.pluck(:id)).map do |friend_id|
           { from_id: user_id, to_id: friend_id }
         end
       )
     else # followers
       TwitterUserRelation.create(
-        (valid_local_users.pluck(:id) - visited_user.followers.pluck(:id)).map do |follower_id|
+        (valid_local_users.pluck(:id) - visited_twitter_user.followers.pluck(:id)).map do |follower_id|
           { from_id: follower_id, to_id: user_id }
         end
       )
@@ -70,7 +72,8 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
   end
 
   def twitter_users_ids
-    @twitter_users_ids ||= connector.relations_ids(twitter_user_id, relation)
+    @twitter_users_ids ||= connector.ids_of_users_in_relation_with(
+      twitter_user_id, relation)
   end
 
   def connector
@@ -81,7 +84,7 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
     User.find(authenticated_user_id)
   end
 
-  def visited_user
+  def visited_twitter_user
     TwitterUser.find_by(screen_name: twitter_user_id)
   end
 

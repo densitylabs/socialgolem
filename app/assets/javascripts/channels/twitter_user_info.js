@@ -61,11 +61,15 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
             var isFriend = window.authenticatedUserFriendsIds.indexOf(
               user['twitter_id']) != -1;
 
+            $('head style').append('.' + user['screen_name']
+              + '::after{ background: url("' + user['profile_image_url']
+              + '") no-repeat center center/cover }');
+
             $usersContainer.append(compiled_template({ user: user,
                                                        isFriend: isFriend }));
           };
 
-          if (afterComplete) afterComplete();
+          if (typeof afterComplete === 'function') afterComplete();
         };
 
         function fetchUsersInPage(pageNumber, event) {
@@ -148,7 +152,7 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
         updatePagination(window.userCount);
 
         $filterControl.change(function(){
-          fetchUsersInPage(1);
+          $pagination.pagination('selectPage', 1);
         });
       }
     }

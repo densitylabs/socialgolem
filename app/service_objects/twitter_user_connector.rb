@@ -52,7 +52,7 @@ class TwitterUserConnector
     users.each { |user| user['profile_image_url'].sub!('_normal', '') }
   end
 
-  def relations_ids(user_id, relation)
+  def ids_of_users_in_relation_with(user_id, relation)
     if relation == 'friends'
       friends_ids_for(user_id)
     else
