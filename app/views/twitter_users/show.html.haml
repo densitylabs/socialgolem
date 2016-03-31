@@ -35,7 +35,9 @@
       .card-profile_user-infos
         %span.infos_name <%= user['name'] %>
         %span.infos_nick @<%= user['screen_name'] %>
+        <% if (!isFriend) { %>
         %a.fn-follow(href='<%= user["twitter_id"] %>')
+        <% } %>
       .card-profile_user-stats
         .stats-holder
           .user-stats

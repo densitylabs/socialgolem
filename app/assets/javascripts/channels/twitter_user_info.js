@@ -58,7 +58,11 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
 
           for (var i = 0; i < loopSize; i++) {
             var user = users[i];
-            $usersContainer.append(compiled_template({ user: user }));
+            var isFriend = window.authenticatedUserFriendsIds.indexOf(
+              user['twitter_id']) != -1;
+
+            $usersContainer.append(compiled_template({ user: user,
+                                                       isFriend: isFriend }));
           };
 
           if (afterComplete) afterComplete();
@@ -102,7 +106,7 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
         function reactToInitialMessage() {
           window.usersTotal = data['users_total'];
           window.userCount = window.userCount + data['available_local_total'];
-
+          window.authenticatedUserFriendsIds = data['authenticated_user_friends_ids'];
         };
 
         function allUsersFetched() {

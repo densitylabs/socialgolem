@@ -15,8 +15,10 @@ class OauthController < ApplicationController
   def persist_user(user_info)
     create_twitter_user_record(user_info)
 
-    User.find_or_create_user_with({ screen_name: user_info['screen_name'] },
-                                    user_info.slice('name', 'token', 'secret'))
+    User.find_or_create_user_with(
+      { screen_name: user_info['screen_name'],
+        twitter_id: user_info['id'] },
+      user_info.slice('name', 'token', 'secret'))
   end
 
   def create_twitter_user_record(twitter_user_info)
@@ -27,6 +29,7 @@ class OauthController < ApplicationController
       friends_count: twitter_user_info['friends_count'],
       followers_count: twitter_user_info['followers_count'],
       statuses_count: twitter_user_info['statuses_count'],
-      profile_image_url: twitter_user_info['profile_image_url'])
+      profile_image_url: twitter_user_info['profile_image_url'],
+      verified_on: Time.current)
   end
 end

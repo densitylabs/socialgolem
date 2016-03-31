@@ -24,7 +24,8 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
       initial_message: 'true',
       users_total: twitter_users_ids.count,
       available_local_total: valid_local_users.count,
-      users: valid_local_users[0..50])
+      users: valid_local_users[0..50],
+      authenticated_user_friends_ids: authenticated_user_friends_ids)
   end
 
   def delegate_fetch_of_users_info
@@ -37,6 +38,10 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
     end
   end
 
+  def authenticated_user_friends_ids
+    connector.friends_ids_for(authenticated_user.screen_name)
+  end
+
   def twitter_users_ids_to_fetch
     twitter_users_ids - valid_local_users.pluck(:twitter_id)
   end
@@ -47,25 +52,21 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
   end
 
   def associate_existent_users
-    user_id = user.id
+    user_id = TwitterUser.find_by(screen_name: twitter_user_id).id
 
     if relation == 'friends'
       TwitterUserRelation.create(
-        (valid_local_users.pluck(:id) - user.friends.pluck(:id)).map do |friend_id|
+        (valid_local_users.pluck(:id) - visited_user.friends.pluck(:id)).map do |friend_id|
           { from_id: user_id, to_id: friend_id }
         end
       )
     else # followers
       TwitterUserRelation.create(
-        (valid_local_users.pluck(:id) - user.followers.pluck(:id)).map do |follower_id|
+        (valid_local_users.pluck(:id) - visited_user.followers.pluck(:id)).map do |follower_id|
           { from_id: follower_id, to_id: user_id }
         end
       )
     end
-  end
-
-  def user
-    @user_id ||= TwitterUser.find_by(screen_name: twitter_user_id)
   end
 
   def twitter_users_ids
@@ -73,7 +74,15 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
   end
 
   def connector
-    @connector ||= TwitterUserConnector.new(User.find(authenticated_user_id))
+    @connector ||= TwitterUserConnector.new(authenticated_user)
+  end
+
+  def authenticated_user
+    User.find(authenticated_user_id)
+  end
+
+  def visited_user
+    TwitterUser.find_by(screen_name: twitter_user_id)
   end
 
   def channel_id

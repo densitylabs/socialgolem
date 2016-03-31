@@ -47,10 +47,11 @@ ActiveRecord::Schema.define(version: 20160329195830) do
   add_index "twitter_users", ["twitter_id"], name: "index_twitter_users_on_twitter_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string "name"
-    t.string "screen_name"
-    t.string "token"
-    t.string "secret"
+    t.string  "name"
+    t.string  "screen_name"
+    t.integer "twitter_id",  limit: 8
+    t.string  "token"
+    t.string  "secret"
   end
 
 end

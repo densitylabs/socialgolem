@@ -34,7 +34,6 @@ class TwitterUserConnector
     end
   end
 
-  # client.send('post'..) is recommended for fetching more than 100 users
   def fetch_users_based_on_ids(ids, opts = {})
     ids = Array.wrap(ids)
     return if ids.blank?
@@ -66,6 +65,10 @@ class TwitterUserConnector
     user.add_friend(id)
   end
 
+  def friends_ids_for(user_id)
+    client.send('get', "/friends/ids.json?screen_name=#{user_id}")['ids']
+  end
+
   private
 
   def client
@@ -77,10 +80,6 @@ class TwitterUserConnector
 
   def followers_ids_for(user_id)
     client.send('get', "/followers/ids.json?screen_name=#{user_id}")['ids']
-  end
-
-  def friends_ids_for(user_id)
-    client.send('get', "/friends/ids.json?screen_name=#{user_id}")['ids']
   end
 
   def unfriendly_users_ids

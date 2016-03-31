@@ -10,12 +10,6 @@ class User < ActiveRecord::Base
   end
 
   def add_friend(id)
-    TwitterUserRelation.create(from_id: twitter_user.id, to_id: id)
-  end
-
-  private
-
-  def twitter_user
-    @twitter_user ||= TwitterUser.find_by(screen_name: screen_name)
+    TwitterUserRelation.create(from_id: twitter_id, to_id: id)
   end
 end
