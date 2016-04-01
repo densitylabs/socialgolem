@@ -1,0 +1,19 @@
+.twitter-card-container
+  .card-profile
+    %div(class="card-profile_visual #{user['screen_name']}")
+    .card-profile_user-infos
+      %span.infos_name= user['name']
+      %span.infos_nick= user['screen_name']
+      - if can_be_followed
+        %a.fn-follow(href="#{user['id']}")
+    .card-profile_user-stats
+      .stats-holder
+        .user-stats
+          %strong Tweets
+          %span= user['statuses_count']
+        .user-stats
+          %strong Followings
+          %span= user['friends_count']
+        .user-stats
+          %strong Followers
+          %span= user['followers_count']

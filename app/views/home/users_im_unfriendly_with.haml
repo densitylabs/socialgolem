@@ -1,81 +1,31 @@
 - content_for :header do
   = stylesheet_link_tag 'twitter_card', media: 'all'
+  = stylesheet_link_tag 'twitter_card_overwrites', media: 'all'
+
+  = javascript_include_tag 'follow_users'
+
   %meta(name='fn-url-follow-user' content=follow_user_twitter_users_path)
-
-  :css
-    .twitter-card-container {
-      margin-left: 3em;
-      margin-top: 3em;
-    }
-
-  :javascript
-    $(document).ready(function(){
-      var followUserUrl = $('meta[name="fn-url-follow-user"]').attr('content');
-
-      function userHasBeenFollowed() {
-        $(this).fadeOut('fast').remove();
-      };
-
-      function followUser(e) {
-        e.preventDefault();
-
-        var id = $(this).attr('href');
-
-        $.ajax({
-          url: followUserUrl,
-          type: 'POST',
-          data: {
-            id: id,
-            id_type: 'twitter_id'
-          }
-        })
-        .done(userHasBeenFollowed.bind(this));
-      };
-
-      $('a.fn-follow').click(followUser);
-    });
 
   %style
     - @users.each do |user|
       = ".#{user['screen_name']}::after{ background: url(\'#{user['profile_image_url']}\')  no-repeat center center/cover }"
+
 .row
   .col.s12
-    %h5 Follow those who follow you:
+    %h5 Follow those who follow you.
+    %p Find who you aren't following back.
 
-  .col.s12
-    .right
-      - if @users.present?
+  - if @users.present?
+    .col.s12
+      .right
         = form_tag(home_follow_users_path, method: 'post') do
           = hidden_field_tag 'users_ids', @users.map { |user| user['id'] }.join(',')
 
           %a(onclick='$(this).closest("form").submit();' href='#' class='waves-effect waves-light btn') Follow all
 
-.div
-  - if @users.present?
-    - @users.each do |user|
-
-      .twitter-card-container
-        .card-profile
-          %div(class="card-profile_visual #{user['screen_name']}")
-          .card-profile_user-infos
-            %span.infos_name= user['name']
-            %span.infos_nick= user['screen_name']
-            %a.fn-follow(href="#{user['id']}")
-          .card-profile_user-stats
-            .stats-holder
-              .user-stats
-                %strong Tweets
-                %span= user['statuses_count']
-              .user-stats
-                %strong Followings
-                %span= user['friends_count']
-              .user-stats
-                %strong Followers
-                %span= user['followers_count']
-
-      -# %p
-      -#   = link_to "• #{user['screen_name']}", "http://twitter.com/#{user['screen_name']}"
+    .col.s12
+      - @users.each do |user|
+        = render partial: 'user_card', locals: { user: user, can_be_followed: true }
 
   - else
-    %p
-      None
+    %p No users found.

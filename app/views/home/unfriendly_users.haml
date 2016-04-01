@@ -1,20 +1,31 @@
-- if @users.present?
-  %p
-    Do you want to unfollow all the users below?
+- content_for :header do
+  = stylesheet_link_tag 'twitter_card', media: 'all'
+  = stylesheet_link_tag 'twitter_card_overwrites', media: 'all'
 
-    = form_tag(home_unfollow_users_path, method: 'post') do
-      = hidden_field_tag 'users_ids', @users.map { |user| user['id'] }.join(',')
+  %meta(name='fn-url-follow-user' content=follow_user_twitter_users_path)
 
-      %a(onclick='$(this).closest("form").submit();' href='#' class='waves-effect waves-light btn') Unfollow users
-
-%br
-Users who aren't following you back:
-
-- if @users.present?
+%style
   - @users.each do |user|
-    %p
-      = link_to "• #{user['screen_name']}", "http://twitter.com/#{user['screen_name']}"
+    = ".#{user['screen_name']}::after{ background: url(\'#{user['profile_image_url']}\')  no-repeat center center/cover }"
 
-- else
-  %p
-    None
+
+.row
+  .col.s12
+    %h5 Purge your followings.
+    %p Find who is not following you back.
+
+  - if @users.present?
+    .col.s12
+      .right
+        = form_tag(home_unfollow_users_path, method: 'post') do
+          = hidden_field_tag 'users_ids', @users.map { |user| user['id'] }.join(',')
+
+          %a(onclick='$(this).closest("form").submit();' href='#' class='waves-effect waves-light btn') Unfollow all
+
+    .col.s12
+      - @users.each do |user|
+        = render partial: 'user_card', locals: { user: user, can_be_followed: false }
+
+  - else
+    .col.s12
+      %p No users found.

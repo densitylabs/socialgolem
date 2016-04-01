@@ -14,6 +14,7 @@ Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'co
 Rails.application.config.assets.precompile += %w(
   twitter_card.css
   simplePagination.css
+  twitter_card_overwrites.css
 
   cable.js
   channels/twitter_user_info.js
@@ -24,4 +25,5 @@ Rails.application.config.assets.precompile += %w(
   materialize/js/dropdown.js
   materialize/js/easing.js
   materialize/js/jquery.easing.1.3
+  follow_users.js
 )
