@@ -46,6 +46,8 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
 
         function renderUsers(users, afterComplete) {
           amountOfUsersToPrint = userLimit - window.displayedUserCount;
+
+          if (users.length <= 0) return false;
           if (amountOfUsersToPrint <= 0) return false;
 
           $internalLoader.fadeOut('fast');

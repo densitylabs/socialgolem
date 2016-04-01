@@ -43,8 +43,6 @@ class LoadRelatedTwitterUsersJob < ActiveJob::Base
   end
 
   def twitter_users_ids_to_fetch
-    return [] if visited_twitter_user.verified_on >= 1.day.ago
-
     twitter_users_ids - valid_local_users.pluck(:twitter_id)
   end
 
