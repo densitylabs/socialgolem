@@ -60,9 +60,9 @@ class TwitterUserConnector
     end
   end
 
-  def friend(id)
-    client.friend(id)
-    user.add_friend(id)
+  def friend(twitter_id)
+    client.friend(twitter_id)
+    user.add_friend(TwitterUser.find_by(twitter_id: twitter_id))
   end
 
   def friends_ids_for(user_id)

@@ -65,14 +65,14 @@
   %form.col.s12.fn-form(action='#' style='display: none;')
     .row
       .fn-relation-control-container.input-field.row.col.s12.m6
-        = select_tag 'fn-relation-control', options_for_select([["Following", "friends"], ["Followers", "followers"]], (params[:relation] || 'friends'))
+        = select_tag 'fn-relation-control', options_for_select([["Followings", "friends"], ["Followers", "followers"]], (params[:relation] || 'friends'))
         %label Show
 
       .fn-filter-control-container.input-field.row.col.s12.m6
         %select#fn-filter-control
           %option(disabled selected) Select an option
           %option(value='followers_count') Follower count
-          %option(value='friends_count') Following count
+          %option(value='friends_count') Followings count
           %option(value='statuses_count') Tweet count
         %label Order by
 
