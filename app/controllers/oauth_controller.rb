@@ -29,7 +29,6 @@ class OauthController < ApplicationController
       friends_count: twitter_user_info['friends_count'],
       followers_count: twitter_user_info['followers_count'],
       statuses_count: twitter_user_info['statuses_count'],
-      profile_image_url: twitter_user_info['profile_image_url'],
-      verified_on: Time.current)
+      profile_image_url: twitter_user_info['profile_image_url'])
   end
 end

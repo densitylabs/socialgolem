@@ -1,4 +1,4 @@
-window.userCount = 0
+window.availableUserCount = 0
 window.displayedUserCount = 0
 
 App.createTwitterUserInfoSubscription = function(userId, realtion){
@@ -34,7 +34,7 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
         var followUserUrl = $('meta[name="fn-url-follow-user"]').attr('content');
 
         function updateLoader() {
-          var currentProgress = (window.userCount * 100) / window.usersTotal;
+          var currentProgress = (window.availableUserCount * 100) / window.relatedUserCount;
 
           if (currentProgress < 100) {
             $loader.find('.determinate')
@@ -60,7 +60,7 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
 
           for (var i = 0; i < loopSize; i++) {
             var user = users[i];
-            var isFriend = window.authenticatedUserFriendsIds.indexOf(
+            var isFriend = window.currentUserIds.indexOf(
               user['twitter_id']) != -1;
 
             $('head style').append('.' + user['screen_name']
@@ -69,6 +69,7 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
 
             $usersContainer.append(compiled_template({ user: user,
                                                        isFriend: isFriend }));
+            window.displayedUserCount = window.displayedUserCount + 1;
           };
 
           if (typeof afterComplete === 'function') afterComplete();
@@ -77,6 +78,8 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
         function fetchUsersInPage(pageNumber, event) {
           $usersContainer.empty();
           $internalLoader.fadeIn('fast');
+
+          // var pattern = (($filterControl.val() == 'following') ? 'friends' : 'followers')
 
           $.ajax({
             url: filterRelatedUsersURL,
@@ -93,7 +96,7 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
 
         function updatePagination() {
           $pagination.pagination({
-              items: window.userCount,
+              items: window.availableUserCount,
               itemsOnPage: userLimit,
               cssStyle: 'light-theme',
               onPageClick: fetchUsersInPage
@@ -110,19 +113,13 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
         };
 
         function reactToInitialMessage() {
-          window.usersTotal = data['users_total'];
-          window.userCount = window.userCount + data['available_local_total'];
-          window.authenticatedUserFriendsIds = data['authenticated_user_friends_ids'];
+          window.relatedUserCount = data['related_user_count'];
+          window.availableUserCount = window.availableUserCount + data['local_user_count'];
+          window.currentUserIds = data['current_user_ids'] || [];
         };
 
         function allUsersFetched() {
-          return window.usersTotal == window.userCount;
-        };
-
-        if (data['initial_message'] != undefined) {
-          reactToInitialMessage();
-        } else {
-          window.userCount = window.userCount + data['users'].length;
+          return window.relatedUserCount <= window.availableUserCount;
         };
 
         function userHasBeenFollowed() {
@@ -146,12 +143,18 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
           $('a.fn-follow').click(followUser);
         };
 
+        if (data['is_base_message'] != undefined) {
+          reactToInitialMessage();
+        } else {
+          window.availableUserCount = window.availableUserCount + data['users'].length;
+        };
+
         renderUsers(data['users'], afterRenderingUsers);
 
         if (allUsersFetched()) enableControls();
 
-        updateLoader(window.userCount);
-        updatePagination(window.userCount);
+        updateLoader(window.availableUserCount);
+        updatePagination(window.availableUserCount);
 
         $filterControl.change(function(){
           $pagination.pagination('selectPage', 1);

@@ -28,7 +28,8 @@ class ApplicationController < ActionController::Base
   end
 
   def current_twitter_user_path
-    twitter_user_path(connector.screen_name)
+    twitter_user_twitter_user_path(user_id: connector.screen_name,
+                                   relation: 'following')
   end
 
   helper_method :current_twitter_user_path

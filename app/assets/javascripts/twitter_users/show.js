@@ -1,28 +1,25 @@
-window.userId = window.location.pathname.split('/')[2];
-
-// Subscription to ActionCable
-function changeChannelSubscriptionTo(relation) {
-  App.subscriptions['twitterUserInfo'].unsubscribe();
-  App.subscriptions['twitterUserInfo'] = App.createTwitterUserInfoSubscription(
-    userId, relation);
-};
-
-var relation = document.head.querySelector("[name=fn-relation").content || 'friends';
-
-App.subscriptions['twitterUserInfo'] = App.createTwitterUserInfoSubscription(
-  userId, relation);
-
 $(window).load(function() {
   var $relationControl = $('#fn-relation-control');
-
   var urlWithoutParams = location.protocol + '//' + location.host + location.pathname;
+
+  var userScreenName = $('meta[name="fn-user-screen-name"]').attr('content');
+
+  function findRelation() {
+    relation = $('meta[name="fn-relation"]').attr('content');
+
+    if (relation == 'following') {
+      return 'friends';
+    } else {
+      return relation;
+    };
+  };
 
   function requestRelatedUsers(relationType, beforeExecute) {
     if (beforeExecute) beforeExecute();
 
     $.ajax({
       url: $('meta[name="fn-user-relations-url"]').attr('content'),
-      data: { id: userId, relation_type: relationType }
+      data: { id: userScreenName, relation_type: relationType }
     })
   };
 
@@ -31,11 +28,21 @@ $(window).load(function() {
   };
 
   function navigateToRelation() {
-    newUrl = urlWithoutParams + '?relation=' + $(this).val();
-    window.location.replace(newUrl);
+    if ($(this).val() == 'friends') {
+      var url = $('meta[name="fn-friends-url"]').attr('content')
+    } else { // followers
+      var url = $('meta[name="fn-followers-url"]').attr('content')
+    };
+
+    window.location.replace(url);
   };
 
   $relationControl.change(navigateToRelation);
 
-  requestRelatedUsers(relation, beforeRequestRelatedUsers);
+  // subscribe to channel to get updates about users
+  App.subscriptions['twitterUserInfo'] = App.createTwitterUserInfoSubscription(
+    userScreenName, findRelation());
+
+  // ask backend to broadcast the users info
+  requestRelatedUsers(findRelation(), beforeRequestRelatedUsers);
 });

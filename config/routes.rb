@@ -16,10 +16,15 @@ Rails.application.routes.draw do
   end
 
   resources :activities, only: :show
-  resources :twitter_users, only: :show do
-    get :relations, on: :member
-    get :filter_related_users, on: :member
-    post :follow_user, on: :collection
+
+  namespace :twitter do
+    resources :users, only: :show do
+      get :relations, on: :member
+      get :filter_related_users, on: :member
+      post :follow_user, on: :collection
+
+      get ':relation' => 'users#show', as: :twitter_user
+    end
   end
 
   get '/oauth/callback', to: 'oauth#callback'

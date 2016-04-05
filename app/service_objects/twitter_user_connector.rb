@@ -52,9 +52,9 @@ class TwitterUserConnector
     users.each { |user| user['profile_image_url'].sub!('_normal', '') }
   end
 
-  def ids_of_users_in_relation_with(user_id, relation)
+  def id_of_users_in_relation_with(user_id, relation)
     if relation == 'friends'
-      friends_ids_for(user_id)
+      friend_ids_for(user_id)
     else
       followers_ids_for(user_id)
     end
@@ -65,7 +65,7 @@ class TwitterUserConnector
     user.add_friend(TwitterUser.find_by(twitter_id: twitter_id))
   end
 
-  def friends_ids_for(user_id)
+  def friend_ids_for(user_id)
     client.send('get', "/friends/ids.json?screen_name=#{user_id}")['ids']
   end
 

@@ -34,13 +34,14 @@ ActiveRecord::Schema.define(version: 20160329195830) do
   add_index "twitter_user_relations", ["to_id"], name: "index_twitter_user_relations_on_to_id", using: :btree
 
   create_table "twitter_users", force: :cascade do |t|
-    t.integer  "twitter_id",        limit: 8
+    t.integer  "twitter_id",          limit: 8
     t.string   "name"
     t.string   "screen_name"
     t.integer  "friends_count"
     t.integer  "followers_count"
     t.integer  "statuses_count"
     t.string   "profile_image_url"
+    t.datetime "friends_verified_on"
     t.datetime "verified_on"
   end
 

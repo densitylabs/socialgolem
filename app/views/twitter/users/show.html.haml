@@ -3,12 +3,14 @@
   = stylesheet_link_tag 'twitter_card_overwrites', media: 'all'
   = stylesheet_link_tag 'simplePagination'
 
-  %meta(name='fn-user-relations-url' content=relations_twitter_user_path)
-  %meta(name='fn-filter-related-users-url' content="#{filter_related_users_twitter_user_path(id: @user.id)}")
-  %meta(name='fn-relation-type' content='friends')
+  %meta(name='fn-user-screen-name' content="#{params[:user_id]}")
+  %meta(name='fn-user-relations-url' content="#{relations_twitter_user_path(params[:user_id])}")
+  %meta(name='fn-filter-related-users-url' content="#{filter_related_users_twitter_user_path(@user.id)}")
   %meta(name='fn-users-per-page' content='51')
   %meta(name='fn-relation' content="#{params[:relation]}")
   %meta(name='fn-url-follow-user' content=follow_user_twitter_users_path)
+  %meta(name='fn-friends-url' content="#{twitter_user_twitter_user_path(user_id: params[:user_id], relation: 'friends')}")
+  %meta(name='fn-followers-url' content="#{twitter_user_twitter_user_path(user_id: params[:user_id], relation: 'followers')}")
 
   = javascript_include_tag 'cable'
   = javascript_include_tag 'channels/twitter_user_info'
@@ -63,7 +65,7 @@
   %form.col.s12.fn-form(action='#' style='display: none;')
     .row
       .fn-relation-control-container.input-field.row.col.s12.m6
-        = select_tag 'fn-relation-control', options_for_select([["Followings", "friends"], ["Followers", "followers"]], (params[:relation] || 'friends'))
+        = select_tag 'fn-relation-control', options_for_select([["Followings", "following"], ["Followers", "followers"]], params[:relation])
         %label Show
 
       .fn-filter-control-container.input-field.row.col.s12.m6
