@@ -24,15 +24,6 @@ class TwitterUser < ActiveRecord::Base
              .offset(per_page * ([page.to_i, 1].max - 1))
   end
 
-  def register_friend_ids(ids)
-    existent_ids = friends.where(twitter_id: ids).pluck(:twitter_id)
-    to_create_ids = ids - existent_ids
-
-    friends.create(to_create_ids.map { |id| { twitter_id: id } })
-    update_attributes(friends_verified_on: Time.current)
-    ids
-  end
-
   def link_related_user_ids(ids, relation)
     linked_user_ids = send(relation).where(twitter_id: ids).pluck(:twitter_id)
     ids -= linked_user_ids
@@ -46,6 +37,12 @@ class TwitterUser < ActiveRecord::Base
     update_attributes("#{relation}_verified_on" => Time.current)
   end
 
+  def relation_verified_after?(relation, datetime)
+    send("#{relation}_verified_on") && send("#{relation}_verified_on") >= datetime
+  end
+
+  private
+
   def link_user_ids(ids, relation)
     data = if relation == 'friends'
              ids.map { |id| { from_id: self.id, to_id: id } }
@@ -54,9 +51,5 @@ class TwitterUser < ActiveRecord::Base
            end
 
     TwitterUserRelation.create(data)
-  end
-
-  def relation_verified_after?(relation, datetime)
-    send("#{relation}_verified_on") && send("#{relation}_verified_on") >= datetime
   end
 end

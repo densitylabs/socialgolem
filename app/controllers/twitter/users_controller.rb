@@ -12,6 +12,14 @@ module Twitter
       @user = TwitterUser.find_by(screen_name: params[:user_id])
     end
 
+    def relations
+      FindRelatedTwitterUsersJob.new.perform(connector.screen_name,
+                                             params[:id],
+                                             params[:relation_type])
+
+      render plain: 'Users being fetched in the background. Expect broadcast message.'
+    end
+
     def filter_related_users
       user = TwitterUser.find(params[:id])
       users = if params[:related_users] == 'friends'
@@ -21,14 +29,6 @@ module Twitter
               end
 
       render json: users
-    end
-
-    def relations
-      FindRelatedTwitterUsersJob.new.perform(connector.screen_name,
-                                             params[:id],
-                                             params[:relation_type])
-
-      render plain: 'Users being fetched in the background. Expect broadcast message.'
     end
 
     def follow_user

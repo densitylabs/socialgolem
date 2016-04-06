@@ -78,6 +78,7 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
         function fetchUsersInPage(pageNumber, event) {
           $usersContainer.empty();
           $internalLoader.fadeIn('fast');
+          window.displayedUserCount = 0;
 
           // var pattern = (($filterControl.val() == 'following') ? 'friends' : 'followers')
 
