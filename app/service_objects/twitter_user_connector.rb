@@ -66,7 +66,10 @@ class TwitterUserConnector
   end
 
   def friend_ids_for(user_id)
-    client.send('get', "/friends/ids.json?screen_name=#{user_id}")['ids']
+    response = client.send('get', "/friends/ids.json?screen_name=#{user_id}")
+
+    raise response['errors'][0]['message'] if response['errors']
+    response['ids']
   end
 
   private

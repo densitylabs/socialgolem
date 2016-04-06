@@ -13,7 +13,7 @@ module Twitter
     end
 
     def relations
-      FindRelatedTwitterUsersJob.new.perform(connector.screen_name,
+      FindRelatedTwitterUsersJob.perform_later(connector.screen_name,
                                              params[:id],
                                              params[:relation_type])
 

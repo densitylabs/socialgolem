@@ -49,7 +49,7 @@ class FindRelatedTwitterUsersJob < ActiveJob::Base
     return if remote_ids.blank?
 
     remote_ids.in_groups_of(100, false) do |user_ids|
-      FindTwitterUsersJob.new.perform(
+      FindTwitterUsersJob.perform_later(
         current_user_screen_name, user_ids, channel_id)
     end
   end
