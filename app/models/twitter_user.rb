@@ -34,15 +34,29 @@ class TwitterUser < ActiveRecord::Base
   end
 
   def link_related_user_ids(ids, relation)
-    existent_user_ids = send(relation).where(twitter_id: ids)
-                                      .pluck(:twitter_id)
-    ids -= existent_user_ids
+    linked_user_ids = send(relation).where(twitter_id: ids).pluck(:twitter_id)
+    ids -= linked_user_ids
 
-    friends.create(ids.map { |id| { twitter_id: id } })
-    update_attributes(friends_verified_on: Time.current)
+    unlinked_users = TwitterUser.where(twitter_id: ids).select(:id, :twitter_id)
+    ids -= unlinked_users.pluck(:twitter_id)
+
+    link_user_ids(unlinked_users.pluck(:id), relation)
+    send(relation).create(ids.map { |id| { twitter_id: id } })
+
+    update_attributes("#{relation}_verified_on" => Time.current)
   end
 
-  def friends_verified_after?(datetime)
-    friends_verified_on && friends_verified_on >= datetime
+  def link_user_ids(ids, relation)
+    data = if relation == 'friends'
+             ids.map { |id| { from_id: self.id, to_id: id } }
+           else # followers
+             ids.map { |id| { from_id: id, to_id: self.id } }
+           end
+
+    TwitterUserRelation.create(data)
   end
+
+  # def friends_verified_after?(datetime)
+  #   friends_verified_on && friends_verified_on >= datetime
+  # end
 end

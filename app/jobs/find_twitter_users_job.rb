@@ -4,7 +4,6 @@ class FindTwitterUsersJob < ActiveJob::Base
   attr_accessor :user_screen_name
 
   def perform(user_screen_name, user_ids, channel_id)
-    binding.pry
     @user_screen_name = user_screen_name
     users = connector.fetch_users_based_on_ids(user_ids)
 
@@ -16,18 +15,16 @@ class FindTwitterUsersJob < ActiveJob::Base
 
   def persist_user(user)
     verified_on = Time.current
-
     user_record = TwitterUser.find_or_initialize_by(twitter_id: user['id'])
 
-    user_record.update_attributes(
-      twitter_id: user['id'],
-      name: user['name'],
-      screen_name: user['screen_name'],
-      friends_count: user['friends_count'],
-      followers_count: user['followers_count'],
-      statuses_count: user['statuses_count'],
-      profile_image_url: user['profile_image_url'],
-      verified_on: verified_on)
+    user_record.update_attributes(twitter_id: user['id'],
+                                  name: user['name'],
+                                  screen_name: user['screen_name'],
+                                  friends_count: user['friends_count'],
+                                  followers_count: user['followers_count'],
+                                  statuses_count: user['statuses_count'],
+                                  profile_image_url: user['profile_image_url'],
+                                  verified_on: verified_on)
   end
 
   def connector

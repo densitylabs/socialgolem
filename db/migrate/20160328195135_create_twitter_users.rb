@@ -9,6 +9,7 @@ class CreateTwitterUsers < ActiveRecord::Migration[5.0]
       t.integer :statuses_count
       t.string :profile_image_url
       t.datetime :friends_verified_on
+      t.datetime :followers_verified_on
     end
 
     add_index :twitter_users, :twitter_id
