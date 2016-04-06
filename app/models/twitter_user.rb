@@ -56,7 +56,7 @@ class TwitterUser < ActiveRecord::Base
     TwitterUserRelation.create(data)
   end
 
-  # def friends_verified_after?(datetime)
-  #   friends_verified_on && friends_verified_on >= datetime
-  # end
+  def relation_verified_after?(relation, datetime)
+    send("#{relation}_verified_on") && send("#{relation}_verified_on") >= datetime
+  end
 end

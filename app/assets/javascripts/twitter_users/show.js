@@ -28,7 +28,7 @@ $(window).load(function() {
   };
 
   function navigateToRelation() {
-    if ($(this).val() == 'friends') {
+    if ($(this).val() == 'following') {
       var url = $('meta[name="fn-friends-url"]').attr('content')
     } else { // followers
       var url = $('meta[name="fn-followers-url"]').attr('content')

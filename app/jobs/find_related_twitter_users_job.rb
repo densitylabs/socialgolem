@@ -3,6 +3,8 @@
 class FindRelatedTwitterUsersJob < ActiveJob::Base
   queue_as :default
 
+  RELATION_VERIFICATION_TTL = 43200 # 12.hours
+
   attr_accessor :current_user_screen_name, :visited_user_screen_name,
                 :relation, :channel_id
 
@@ -53,6 +55,9 @@ class FindRelatedTwitterUsersJob < ActiveJob::Base
   end
 
   def find_and_link_related_ids_of(user, relation)
+    return user.send(relation).pluck(:twitter_id) if
+      user.relation_verified_after?(relation, RELATION_VERIFICATION_TTL.seconds.ago)
+
     ids = connector.id_of_users_in_relation_with(user.screen_name, relation)
     user.link_related_user_ids(ids, relation)
 
