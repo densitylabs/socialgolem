@@ -74,10 +74,10 @@ class FindRelatedTwitterUsersJob < ActiveJob::Base
   end
 
   def current_user
-    TwitterUser.find_by(screen_name: current_user_screen_name)
+    @current_user ||= TwitterUser.find_by(screen_name: current_user_screen_name)
   end
 
   def visited_user
-    TwitterUser.find_by(screen_name: visited_user_screen_name)
+    @visited_user ||= TwitterUser.find_by(screen_name: visited_user_screen_name)
   end
 end

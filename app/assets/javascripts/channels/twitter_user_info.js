@@ -80,8 +80,6 @@ App.createTwitterUserInfoSubscription = function(userId, realtion){
           $internalLoader.fadeIn('fast');
           window.displayedUserCount = 0;
 
-          // var pattern = (($filterControl.val() == 'following') ? 'friends' : 'followers')
-
           $.ajax({
             url: filterRelatedUsersURL,
             data: {
