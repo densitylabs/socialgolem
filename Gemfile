@@ -81,3 +81,4 @@ gem 'pg'
 # gem 'debugger', group: [:development, :test]
 
 gem "figaro"
+gem 'linkedin'
